@@ -69,8 +69,8 @@ export default function App() {
   
   // UI States
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [loginUsername, setLoginUsername] = useState('admin');
-  const [loginPassword, setLoginPassword] = useState('admin123');
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   
   const [isBalanceHidden, setIsBalanceHidden] = useState(false);

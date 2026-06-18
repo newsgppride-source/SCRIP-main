@@ -72,7 +72,7 @@ export function generateDefaultTransactions(): Transaction[] {
     return d.toISOString().substring(0, 7);
   })();
 
-  return
+  return []
 }
 
 // Default Target Budgets (Pemasukan / Pengeluaran)

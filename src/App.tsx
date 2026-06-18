@@ -1198,7 +1198,7 @@ export default function App() {
           <div className="flex justify-between items-center text-[10px] text-slate-400 font-bold tracking-wider uppercase mb-3">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-              {currentUser.role === 'Admin' ? 'Super Admin Mode' : 'Standard User'}
+              {currentUser.role === 'Admin' ? 'MODE KONTROL Admin' : 'Standard User'}
             </div>
             <span>RM Wallet Tracker</span>
           </div>

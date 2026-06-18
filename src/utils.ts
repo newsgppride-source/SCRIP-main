@@ -25,7 +25,7 @@ export function formatCustomDate(dStr: string): string {
 
 // Default Users
 export const DEFAULT_USERS: User[] = [
-  { username: 'admin', fullname: 'Super Admin', role: 'Admin', email: 'admin@hitungduit.my', password: 'admin123' },
+  { username: 'admin', fullname: 'Admin', role: 'Admin', email: 'admin@hitungduit.my', password: 'admin123' },
   { username: 'dina', fullname: 'Dina Wahyu', role: 'User', email: 'dina@hitungduit.my', password: 'dina123' }
 ];
 

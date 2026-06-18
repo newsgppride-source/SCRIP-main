@@ -170,13 +170,24 @@ export class LocalDB {
   }
 
   static getTransactions(): Transaction[] {
-    this.init();
-    return JSON.parse(localStorage.getItem(KEYS.TRANSACTIONS) || '[]');
+    try {
+      this.init();
+      const data = localStorage.getItem(KEYS.TRANSACTIONS);
+      if (!data || data === 'undefined' || data === 'null') {
+        return [];
+      }
+      return JSON.parse(data);
+    } catch (error) {
+      localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify([]));
+      return [];
+    }
   }
 
   static saveTransactions(transactions: Transaction[]) {
-    localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify([]));
+    // PERBAIKAN: Ubah [] menjadi variabel transactions agar data baru bisa tersimpan
+    localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify(transactions));
   }
+
 
   static getBudgets(): Budget[] {
     this.init();

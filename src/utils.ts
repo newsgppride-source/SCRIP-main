@@ -135,7 +135,7 @@ export class LocalDB {
 
   static getUsers(): User[] {
     this.init();
-    return JSON.parse(localStorage.getItem(KEYS.USERS) || '[]');
+    return (localStorage.getItem(KEYS.USERS) || '[]');
   }
 
   static saveUsers(users: User[]) {
@@ -175,7 +175,7 @@ export class LocalDB {
   }
 
   static saveTransactions(transactions: Transaction[]) {
-    localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify(transactions));
+    localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify([]));
   }
 
   static getBudgets(): Budget[] {

@@ -1130,7 +1130,7 @@ export default function App() {
             {/* Header branding */}
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20">
-                // KODE BARU (Menggunakan logo kustom favicon.png Anda):
+                {/* KODE BARU (Menggunakan logo kustom favicon.png Anda): */}
               <img src="/favicon.png" alt="Logo Wang Ajaib Halal" className="w-16 h-16 mx-auto mb-4 object-contain" />
 
               </div>

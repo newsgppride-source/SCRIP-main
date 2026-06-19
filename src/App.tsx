@@ -1273,29 +1273,29 @@ export default function App() {
   User Aktif: "{currentUser?.username || 'KOSONG/NULL'}" | Role: "{currentUser?.role || 'KOSONG'}"
 </div>
 
-   {/* PENGUNCIAN TOTAL: DIPAKSA HURUF KECIL DAN HANYA UNTUK STRIP USERNAME 'admin' */}
+  {/* PENGUNCIAN KETAT: KOTAK PILIHAN INI HANYA AKAN DIGAMBAR JIKA USERNAME ADALAH ADMIN */}
 {currentUser?.username?.toLowerCase().trim() === 'admin' && (
-  <div className="flex flex-col gap-1 mt-2">
-    <select 
-      value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
-      onChange={(e) => {
-        const selectedCurrency = e.target.value;
-        localStorage.setItem('hitungduit_currency', selectedCurrency);
-        if (currentUser) {
-          const updatedUser = { ...currentUser, currency: selectedCurrency };
-          setCurrentUser(updatedUser);
-          if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
-        }
-        triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
-        setTimeout(() => window.location.reload(), 500);
-      }}
-      className="border p-1 rounded bg-white text-black text-xs cursor-pointer"
-    >
-      <option value="MYR">RM (Malaysia)</option>
-      <option value="IDR">Rp (Indonesia)</option>
-      <option value="BND">B$ (Brunei)</option>
-      <option value="SGD">S$ (Singapura)</option>
-    </select>
+  <select 
+    value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
+    onChange={(e) => {
+      const selectedCurrency = e.target.value;
+      localStorage.setItem('hitungduit_currency', selectedCurrency);
+      if (currentUser) {
+        const updatedUser = { ...currentUser, currency: selectedCurrency };
+        setCurrentUser(updatedUser);
+        if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
+      }
+      triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
+      setTimeout(() => window.location.reload(), 500);
+    }}
+    className="border p-1 rounded bg-white text-black text-sm cursor-pointer h-9 px-2 font-medium"
+  >
+    <option value="MYR">RM (Malaysia)</option>
+    <option value="IDR">Rp (Indonesia)</option>
+    <option value="BND">B$ (Brunei)</option>
+    <option value="SGD">S$ (Singapura)</option>
+  </select>
+)}
   </div>
 )}
 

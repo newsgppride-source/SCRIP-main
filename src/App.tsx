@@ -1270,31 +1270,28 @@ export default function App() {
                 <SettingsIcon className="w-4 h-4" />
               </button>
 
-      {/* PENGUNCIAN AKHIR: HANYA USERNAME ADMIN YANG BISA MEMBUKA BLOKIR KELAS VISUAL CSS */}
-{currentUser?.username?.toLowerCase().trim() === 'admin' && (
-  <div className="admin-area inline-block">
-    <select 
-      value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
-      onChange={(e) => {
-        const selectedCurrency = e.target.value;
-        localStorage.setItem('hitungduit_currency', selectedCurrency);
-        if (currentUser) {
-          const updatedUser = { ...currentUser, currency: selectedCurrency };
-          setCurrentUser(updatedUser);
-          if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
-        }
-        triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
-        setTimeout(() => window.location.reload(), 500);
-      }}
-      className="border p-1 rounded bg-white text-black text-xs cursor-pointer"
-    >
-      <option value="MYR">RM (Malaysia)</option>
-      <option value="IDR">Rp (Indonesia)</option>
-      <option value="BND">B$ (Brunei)</option>
-      <option value="SGD">S$ (Singapura)</option>
-    </select>
-  </div>
-)}
+   {/* CUKUP TAMBAHKAN id="tombol-mata-uang" PADA TAG SELECT INI */}
+<select 
+  id="tombol-mata-uang"
+  value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
+  onChange={(e) => {
+    const selectedCurrency = e.target.value;
+    localStorage.setItem('hitungduit_currency', selectedCurrency);
+    if (currentUser) {
+      const updatedUser = { ...currentUser, currency: selectedCurrency };
+      setCurrentUser(updatedUser);
+      if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
+    }
+    triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
+    setTimeout(() => window.location.reload(), 500);
+  }}
+  className="border p-1 rounded bg-white text-black text-xs cursor-pointer"
+>
+  <option value="MYR">RM (Malaysia)</option>
+  <option value="IDR">Rp (Indonesia)</option>
+  <option value="BND">B$ (Brunei)</option>
+  <option value="SGD">S$ (Singapura)</option>
+</select>
 
               <button 
                 onClick={handleLogout}

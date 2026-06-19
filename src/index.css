@@ -41,18 +41,16 @@
 .scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-/* ================================================================= */
-/* SOLUSI VISUAL TOTAL: PAKSA HILANGKAN DROPDOWN MATA UANG DARI LAYAR*/
+}/* ================================================================= */
+/* PROSES PENGGUSURAN TOTAL: PAKSA HILANGKAN TOMBOL MATA UANG UTAMA  */
 /* ================================================================= */
 
-/* Mengunci bentuk fisik class dropdown mata uang secara total agar tidak digambar oleh browser */
-select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer {
+/* 1. Hilangkan tombol secara visual dari seluruh website */
+#tombol-mata-uang {
   display: none !important;
 }
 
-/* Jika admin masuk, biarkan utilitas admin-mode yang menampilkannya kembali */
-body.admin-mode select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer,
-.admin-area select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer {
+/* 2. PENGECUALIAN: Hanya munculkan kembali jika yang masuk adalah Admin */
+body[data-username="admin"] #tombol-mata-uang {
   display: inline-block !important;
 }

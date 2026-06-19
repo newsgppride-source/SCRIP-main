@@ -1263,16 +1263,20 @@ export default function App() {
               >
                 <SettingsIcon className="w-4 h-4" />
               </button>
-            {/* HANYA ADMIN YANG BISA MELIHAT & MENGUBAH MATA UANG */}
+            {/* HANYA ADMIN YANG BOLEH MELIHAT DAN MENGUBAH MATA UANG */}
 {currentUser?.role === 'Admin' && (
   <div className="flex flex-col gap-1 mt-2">
-    <span className="text-[10px] text-gray-400 font-medium">Mata Uang Sistem:</span>
     <select 
       value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
       onChange={(e) => {
         const selectedCurrency = e.target.value;
         localStorage.setItem('hitungduit_currency', selectedCurrency);
-        triggerToast(`Mata uang sistem diganti ke ${selectedCurrency}!`);
+        if (currentUser) {
+          const updatedUser = { ...currentUser, currency: selectedCurrency };
+          setCurrentUser(updatedUser);
+          if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
+        }
+        triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
         setTimeout(() => window.location.reload(), 500);
       }}
       className="border p-1 rounded bg-white text-black text-xs cursor-pointer"

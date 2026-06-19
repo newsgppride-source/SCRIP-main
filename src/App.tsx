@@ -1268,8 +1268,8 @@ export default function App() {
                 }`}
               >
                 <SettingsIcon className="w-4 h-4" />
-    {/* PENGUNCIAN KETAT: TOMBOL KECIL INI HANYA BOLEH MUNCUL DI USERNAME 'admin' */}
-{currentUser?.username === 'admin' && (
+   {/* PENGUNCIAN TOTAL: DIPAKSA HURUF KECIL DAN HANYA UNTUK STRIP USERNAME 'admin' */}
+{currentUser?.username?.toLowerCase().trim() === 'admin' && (
   <div className="flex flex-col gap-1 mt-2">
     <select 
       value={localStorage.getItem('hitungduit_currency') || 'MYR'} 

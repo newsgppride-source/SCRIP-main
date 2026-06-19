@@ -1009,15 +1009,27 @@ export default function App() {
     }
   };
 
-  const handleDeleteBudget = (b: Budget) => {
+   const handleDeleteBudget = async (b: Budget) => {
     if (window.confirm(`Padam sasaran limit "${b.category}"?`)) {
-      const updated = budgets.filter(item => !(item.month === b.month && item.category === b.category && item.type === b.type));
-      setBudgets(updated);
-      LocalDB.saveBudgets(updated);
-      dbDeleteBudget(b);
-      triggerToast('Sasaran limit dibatalkan.');
+      try {
+        // 1. Hapus dari state layar dan LocalDB seperti biasa
+        const updated = budgets.filter(item => !(item.month === b.month && item.category === b.category && item.type === b.type));
+        setBudgets(updated);
+        LocalDB.saveBudgets(updated);
+        
+        // 2. PERBAIKAN: Kirim perintah hapus ke Firebase dan pastikan ditunggu (async/await)
+        if (b && typeof dbDeleteBudget === 'function') {
+          await dbDeleteBudget(b);
+        }
+        
+        triggerToast('Sasaran limit dibatalkan.');
+      } catch (error) {
+        console.error("Gagal memadamkan anggaran dari server:", error);
+        triggerToast('Gagal memadamkan dari server, coba lagi.');
+      }
     }
   };
+
 
   // Export CSV Handler
   const handleExportCSV = () => {

@@ -42,13 +42,22 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-/* GEMBOK VISUAL RADIKAL: PAKSA HILANGKAN SEMUA DROPDOWN MATA UANG UNTUK NON-ADMIN */
-body:not([data-username="admin"]) select {
+/* ================================================================= */
+/* TRIK PENGGUSURAN FISIK: HAPUS DROPDOWN 4 NEGARA JIKA BUKAN ADMIN  */
+/* ================================================================= */
+
+/* Jika di dalam website ada dropdown yang isinya pas 4 pilihan, hilangkan secara visual */
+select:has(option:nth-child(4)):not(:has(option:nth-child(5))) {
   display: none !important;
 }
 
-/* JIKA DATA USERNAME DI BODY BELUM TERPASANG, INI CADANGANNYA */
-body:not(:has(#admin-flag)) select:has(option[value="IDR"]),
-body:not(:has(#admin-flag)) select:has(option[value="MYR"]) {
+/* Jika dropdown tersebut dibungkus oleh kotak DIV kecil, ikut hilangkan juga */
+div:has(> select:has(option:nth-child(4)):not(:has(option:nth-child(5)))) {
   display: none !important;
 }
+/* PENGECUALIAN: Jika halaman mendeteksi Anda adalah Admin, munculkan kembali tombolnya */
+body.admin-mode select, 
+body:has(.text-emerald-500) select {
+  display: inline-block !important;
+}
+

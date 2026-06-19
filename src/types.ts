@@ -40,7 +40,8 @@ export interface Budget {
 export interface User {
   username: string;
   fullname: string;
-  role: 'Admin' | 'User';
+  role: string;
   email: string;
   password?: string;
+  currency?: string; // Tambahkan baris ini
 }

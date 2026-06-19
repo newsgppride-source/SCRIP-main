@@ -1,10 +1,17 @@
 import { Asset, Category, Pilar, Budget, Transaction, User } from './types';
 
 // Helper to format currency in Malaysian Ringgit
-export function formatMYR(n: number): string {
-  return new Intl.NumberFormat('en-MY', {
+// Fungsi baru untuk mendukung MYR, IDR, BND, dan SGD
+export function formatCurrency(n: number, currencyCode: string = 'MYR'): string {
+  // Menentukan format tulisan berdasarkan mata uang
+  let locale = 'en-MY'; 
+  if (currencyCode === 'IDR') locale = 'id-ID';
+  if (currencyCode === 'BND') locale = 'ms-BN';
+  if (currencyCode === 'SGD') locale = 'en-SG';
+
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency: 'MYR',
+    currency: currencyCode,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }).format(n || 0);

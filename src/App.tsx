@@ -309,12 +309,18 @@ export default function App() {
     }, 2500);
   };
 
-  // Handle system logging out
-  const handleLogout = () => {
-    sessionStorage.removeItem('logged_user');
-    setCurrentUser(null);
-    triggerToast('Anda telah log keluar.');
-  };
+ const handleLogout = () => {
+  // 1. Bersihkan seluruh memori sesi login di browser agar tidak tersangkut
+  localStorage.clear(); 
+  
+  // 2. Setel ulang status user aktif menjadi kosong (null)
+  setCurrentUser(null); 
+  
+  triggerToast('Anda telah log keluar.');
+  
+  // 3. Muat ulang halaman agar sistem bersih total
+  window.location.reload(); 
+};
 
   // Handle authentication login
   const handleLogin = (e: React.FormEvent) => {

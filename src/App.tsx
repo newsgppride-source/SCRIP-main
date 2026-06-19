@@ -1262,9 +1262,8 @@ export default function App() {
                 }`}
               >
                 <SettingsIcon className="w-4 h-4" />
-              </button>
-    {/* KUNCI TOMBOL KEDUA AGAR HANYA MUNCUL DI AKUN ADMIN */}
-{currentUser?.role === 'Admin' && (
+      {/* PENGUNCIAN KETAT: HANYA USERNAME 'admin' YANG BOLEH MELIHAT TOMBOL INI */}
+{currentUser?.username === 'admin' && (
   <div className="flex flex-col gap-1 mt-4">
     <label className="text-sm font-medium text-gray-700">Mata Uang Utama</label>
     <select 
@@ -1280,7 +1279,7 @@ export default function App() {
         triggerToast('Mata uang berhasil diubah!');
         setTimeout(() => window.location.reload(), 500);
       }}
-      className="border p-2 rounded-lg text-sm bg-white"
+      className="border p-2 rounded-lg text-sm bg-white text-black"
     >
       <option value="MYR">Ringgit Malaysia (RM)</option>
       <option value="IDR">Rupiah Indonesia (Rp)</option>

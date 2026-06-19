@@ -1268,36 +1268,31 @@ export default function App() {
                 }`}
               >
                 <SettingsIcon className="w-4 h-4" />
-                {/* KODE DETEKTIF: UNTUK MELIHAT SIAPA USERNAME ASLI DI MEMORI REACT */}
-<div className="bg-yellow-100 text-black text-[10px] p-1 rounded mb-1 text-center font-mono">
-  User Aktif: "{currentUser?.username || 'KOSONG/NULL'}" | Role: "{currentUser?.role || 'KOSONG'}"
-</div>
+              </button>
 
-  {/* PENGUNCIAN KETAT: KOTAK PILIHAN INI HANYA AKAN DIGAMBAR JIKA USERNAME ADALAH ADMIN */}
-{currentUser?.username?.toLowerCase().trim() === 'admin' && (
-  <select 
-    value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
-    onChange={(e) => {
-      const selectedCurrency = e.target.value;
-      localStorage.setItem('hitungduit_currency', selectedCurrency);
-      if (currentUser) {
-        const updatedUser = { ...currentUser, currency: selectedCurrency };
-        setCurrentUser(updatedUser);
-        if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
-      }
-      triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
-      setTimeout(() => window.location.reload(), 500);
-    }}
-    className="border p-1 rounded bg-white text-black text-sm cursor-pointer h-9 px-2 font-medium"
-  >
-    <option value="MYR">RM (Malaysia)</option>
-    <option value="IDR">Rp (Indonesia)</option>
-    <option value="BND">B$ (Brunei)</option>
-    <option value="SGD">S$ (Singapura)</option>
-  </select>
-)}
-  </div>
-)}
+              {/* PENGUNCIAN TOTAL: TOMBOL MATA UANG HANYA UNTUK USERNAME ADMIN */}
+              {currentUser?.username?.toLowerCase().trim() === 'admin' && (
+                <select 
+                  value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
+                  onChange={(e) => {
+                    const selectedCurrency = e.target.value;
+                    localStorage.setItem('hitungduit_currency', selectedCurrency);
+                    if (currentUser) {
+                      const updatedUser = { ...currentUser, currency: selectedCurrency };
+                      setCurrentUser(updatedUser);
+                      if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
+                    }
+                    triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
+                    setTimeout(() => window.location.reload(), 500);
+                  }}
+                  className="border p-1 rounded bg-white text-black text-sm cursor-pointer h-9 px-2 font-medium"
+                >
+                  <option value="MYR">RM (Malaysia)</option>
+                  <option value="IDR">Rp (Indonesia)</option>
+                  <option value="BND">B$ (Brunei)</option>
+                  <option value="SGD">S$ (Singapura)</option>
+                </select>
+              )}
 
               <button 
                 onClick={handleLogout}

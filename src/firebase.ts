@@ -298,3 +298,84 @@ export async function fetchLiveState() {
     isUserWriteLocked: isLocked
   };
 }
+// =================================================================
+// PERBAIKAN: MENAMBAHKAN USERNAME SUPAYA SALDO & TRANSAKSI TERPISAH
+// =================================================================
+
+// Fungsi untuk mengambil username yang saat ini sedang aktif login
+function getActiveUsername(): string {
+  try {
+    // Membaca session login aktif di browser Anda
+    const activeUser = localStorage.getItem('hitungduit_active_user'); 
+    return activeUser ? JSON.parse(activeUser).username : 'global';
+  } catch {
+    return 'global';
+  }
+}
+
+export async function dbSaveUser(user: User) {
+  await setDoc(doc(db, 'users', user.username), user);
+}
+
+export async function dbDeleteUser(username: string) {
+  await deleteDoc(doc(db, 'users', username));
+}
+
+// 1. Memisahkan Dompet & Saldo per User
+export async function dbSaveAsset(asset: Asset) {
+  const username = getActiveUsername();
+  const uniqueAssetName = `${username}_${asset.name}`;
+  await setDoc(doc(db, 'assets', uniqueAssetName), { ...asset, owner: username });
+}
+
+export async function dbDeleteAsset(name: string) {
+  const username = getActiveUsername();
+  await deleteDoc(doc(db, 'assets', `${username}_${name}`));
+}
+
+// 2. Memisahkan Transaksi per User
+export async function dbSaveTransaction(tx: Transaction) {
+  const username = getActiveUsername();
+  await setDoc(doc(db, 'transactions', tx.id), { ...tx, owner: username });
+}
+
+export async function dbDeleteAsset(name: string) {
+  const username = getActiveUsername();
+  await deleteDoc(doc(db, 'assets', `${username}_${name}`));
+}
+
+export async function dbSavePilar(pilar: Pilar) {
+  await setDoc(doc(db, 'pilars', pilar.name), pilar);
+}
+
+export async function dbDeletePilar(name: string) {
+  await deleteDoc(doc(db, 'pilars', name));
+}
+
+export async function dbSaveCategory(category: Category) {
+  await setDoc(doc(db, 'categories', `${category.name}_${category.type}`), category);
+}
+
+export async function dbDeleteCategory(categoryName: string, categoryType: string) {
+  await deleteDoc(doc(db, 'categories', `${categoryName}_${categoryType}`));
+}
+
+// 2. Memisahkan Catatan Transaksi per Akun User
+export async function dbSaveTransaction(tx: Transaction) {
+  const username = getActiveUsername();
+  await setDoc(doc(db, 'transactions', tx.id), { ...tx, owner: username });
+}
+
+export async function dbDeleteTransaction(id: string) {
+  await deleteDoc(doc(db, 'transactions', id));
+}
+
+export async function dbSaveBudget(budget: Budget) {
+  const docId = `${budget.month}_${budget.type}_${budget.category.split('/').join('_')}`;
+  await setDoc(doc(db, 'budgets', docId), budget);
+}
+
+export async function dbDeleteBudget(budget: Budget) {
+  const docId = `${budget.month}_${budget.type}_${budget.category.split('/').join('_')}`;
+  await deleteDoc(doc(db, 'budgets', docId));
+}

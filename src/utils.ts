@@ -118,10 +118,12 @@ const KEYS = {
 
 // State Manager class for Local Storage Sync
 export class LocalDB {
-  static init() {
+   static init() {
     const initKey = (key: string, defaultValue: any) => {
       const value = localStorage.getItem(key);
-      if (!value || value === '[]') {
+      // PERBAIKAN: Hapus pengecekan value === '[]'
+      // Sekarang, jika data kosong karena habis dihapus, tidak akan dipaksa isi ulang data default lagi
+      if (value === null) {
         localStorage.setItem(key, JSON.stringify(defaultValue));
       }
     };
@@ -132,6 +134,7 @@ export class LocalDB {
     initKey(KEYS.TRANSACTIONS, generateDefaultTransactions());
     initKey(KEYS.BUDGETS, DEFAULT_BUDGETS);
   }
+
 
   static getUsers(): User[] {
     this.init();

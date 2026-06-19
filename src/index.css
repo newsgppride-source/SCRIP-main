@@ -43,18 +43,16 @@
   scrollbar-width: none;
 }
 /* ================================================================= */
-/* BOM NUKLIR CSS: PAKSA LENYAPKAN DROPDOWN MATA UANG DARI LAYAR   */
+/* ATURAN VISUAL FINAL: PAKSA LENYAPKAN DROPDOWN MATA UANG NON-ADMIN */
 /* ================================================================= */
 
-/* 1. Hilangkan total elemen select mata uang di seluruh sudut website Anda */
-select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer,
-select:has(option[value="MYR"]):has(option[value="IDR"]) {
+/* 1. Hilangkan total bentuk fisik tombol mata uang tersebut dari layar */
+select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer {
   display: none !important;
 }
 
-/* 2. PENGECUALIAN MUTLAK: Hanya munculkan jika ada penanda teks Admin di layar */
-body:has(:contains("Admin")) select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer,
-body:has(:contains("admin")) select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer,
-body:has(.text-emerald-500) select:has(option[value="MYR"]) {
+/* 2. PENGECUALIAN: Hanya munculkan kembali jika yang masuk adalah Admin */
+body[data-username="admin"] select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer,
+body.admin-mode select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer {
   display: inline-block !important;
 }

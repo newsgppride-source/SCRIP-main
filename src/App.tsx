@@ -1268,6 +1268,11 @@ export default function App() {
                 }`}
               >
                 <SettingsIcon className="w-4 h-4" />
+                {/* KODE DETEKTIF: UNTUK MELIHAT SIAPA USERNAME ASLI DI MEMORI REACT */}
+<div className="bg-yellow-100 text-black text-[10px] p-1 rounded mb-1 text-center font-mono">
+  User Aktif: "{currentUser?.username || 'KOSONG/NULL'}" | Role: "{currentUser?.role || 'KOSONG'}"
+</div>
+
    {/* PENGUNCIAN TOTAL: DIPAKSA HURUF KECIL DAN HANYA UNTUK STRIP USERNAME 'admin' */}
 {currentUser?.username?.toLowerCase().trim() === 'admin' && (
   <div className="flex flex-col gap-1 mt-2">

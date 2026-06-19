@@ -1270,28 +1270,32 @@ export default function App() {
                 <SettingsIcon className="w-4 h-4" />
               </button>
 
-              {/* PENGUNCIAN VISUAL UTAMA: JIKA BUKAN ADMIN, TOMBOL INI OTOMATIS GHAIB/HIDDEN */}
-  <select 
-    hidden={currentUser?.username?.toLowerCase().trim() !== 'admin'}
-    value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
-    onChange={(e) => {
-      const selectedCurrency = e.target.value;
-      localStorage.setItem('hitungduit_currency', selectedCurrency);
-      if (currentUser) {
-        const updatedUser = { ...currentUser, currency: selectedCurrency };
-        setCurrentUser(updatedUser);
-        if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
-      }
-      triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
-      setTimeout(() => window.location.reload(), 500);
-    }}
-    className="border p-1 rounded bg-white text-black text-sm cursor-pointer h-9 px-2 font-medium"
-  >
-    <option value="MYR">RM (Malaysia)</option>
-    <option value="IDR">Rp (Indonesia)</option>
-    <option value="BND">B$ (Brunei)</option>
-    <option value="SGD">S$ (Singapura)</option>
-  </select>
+      {/* PENGUNCIAN AKHIR: HANYA USERNAME ADMIN YANG BISA MEMBUKA BLOKIR KELAS VISUAL CSS */}
+{currentUser?.username?.toLowerCase().trim() === 'admin' && (
+  <div className="admin-area inline-block">
+    <select 
+      value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
+      onChange={(e) => {
+        const selectedCurrency = e.target.value;
+        localStorage.setItem('hitungduit_currency', selectedCurrency);
+        if (currentUser) {
+          const updatedUser = { ...currentUser, currency: selectedCurrency };
+          setCurrentUser(updatedUser);
+          if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
+        }
+        triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
+        setTimeout(() => window.location.reload(), 500);
+      }}
+      className="border p-1 rounded bg-white text-black text-xs cursor-pointer"
+    >
+      <option value="MYR">RM (Malaysia)</option>
+      <option value="IDR">Rp (Indonesia)</option>
+      <option value="BND">B$ (Brunei)</option>
+      <option value="SGD">S$ (Singapura)</option>
+    </select>
+  </div>
+)}
+
               <button 
                 onClick={handleLogout}
                 className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-400 flex items-center justify-center active:scale-95 transition-all"

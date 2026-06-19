@@ -43,15 +43,16 @@
   scrollbar-width: none;
 }
 /* ================================================================= */
-/* SOLUSI AKHIR: HANCURKAN DROPDOWN MATA UANG UTAMA JIKA BUKAN ADMIN */
+/* SOLUSI VISUAL TOTAL: PAKSA HILANGKAN DROPDOWN MATA UANG DARI LAYAR*/
 /* ================================================================= */
 
-/* 1. Jika pengguna biasa (Dina) masuk, hapus kotak dropdown ini dari layar */
-body:not([data-username="admin"]) select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer {
+/* Mengunci bentuk fisik class dropdown mata uang secara total agar tidak digambar oleh browser */
+select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer {
   display: none !important;
 }
 
-/* 2. Jika struktur pembungkus div luarnya ikut membawa jarak/margin, sembunyikan juga */
-body:not([data-username="admin"]) div:has(> select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer) {
-  display: none !important;
+/* Jika admin masuk, biarkan utilitas admin-mode yang menampilkannya kembali */
+body.admin-mode select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer,
+.admin-area select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer {
+  display: inline-block !important;
 }

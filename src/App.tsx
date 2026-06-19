@@ -764,14 +764,19 @@ export default function App() {
 
     const mType = settingsModal.type;
 
-    if (mType === 'add_user') {
+       if (mType === 'add_user') {
       if (!userInputUsername || !userInputFullname) return;
+      
+      // PERBAIKAN: Mengambil mata uang sistem yang sedang aktif saat pendaftaran
+      const currentSystemCurrency = localStorage.getItem('hitungduit_currency') || 'MYR';
+
       const newUser: User = {
         username: userInputUsername.toLowerCase().trim(),
         fullname: userInputFullname.trim(),
         role: userInputRole,
         email: userInputEmail.trim(),
-        password: userInputPassword.trim() || undefined
+        password: userInputPassword.trim() || undefined,
+        currency: currentSystemCurrency // Mata uang user baru mengikuti mata uang sistem saat ini
       };
       const updated = [...users, newUser];
       setUsers(updated);
@@ -790,12 +795,14 @@ export default function App() {
             role: userInputRole, 
             email: userInputEmail,
             password: userInputPassword.trim() ? userInputPassword.trim() : u.password
+            // Tetap mempertahankan mata uang asli mereka saat diedit
           };
           dbSaveUser(edited);
           return edited;
         }
         return u;
-      });
+      }); // Baris pelengkap penutup map
+
       setUsers(updated);
       LocalDB.saveUsers(updated);
       triggerToast('Akaun pengguna telah dikemaskini.');
@@ -1256,35 +1263,27 @@ export default function App() {
               >
                 <SettingsIcon className="w-4 h-4" />
               </button>
-             {/* KOTAK PILIHAN MATA UANG PERBAIKAN */}
-<div className="flex flex-col gap-1 mt-2">
-  <select 
-    value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
-    onChange={(e) => {
-      const selectedCurrency = e.target.value;
-      // 1. Simpan mata uang langsung ke browser localstorage agar instan
-      localStorage.setItem('hitungduit_currency', selectedCurrency);
-      
-      // 2. Jika akun user sedang aktif, ikut perbarui datanya
-      if (currentUser) {
-        const updatedUser = { ...currentUser, currency: selectedCurrency };
-        setCurrentUser(updatedUser);
-        if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
-      }
-      
-      triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
-      
-      // 3. Paksa aplikasi memuat ulang tampilan dengan mata uang baru
-      setTimeout(() => window.location.reload(), 500);
-    }}
-    className="border p-1 rounded bg-white text-black text-xs cursor-pointer"
-  >
-    <option value="MYR">RM (Malaysia)</option>
-    <option value="IDR">Rp (Indonesia)</option>
-    <option value="BND">B$ (Brunei)</option>
-    <option value="SGD">S$ (Singapura)</option>
-  </select>
-</div>
+            {/* HANYA ADMIN YANG BISA MELIHAT & MENGUBAH MATA UANG */}
+{currentUser?.role === 'Admin' && (
+  <div className="flex flex-col gap-1 mt-2">
+    <span className="text-[10px] text-gray-400 font-medium">Mata Uang Sistem:</span>
+    <select 
+      value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
+      onChange={(e) => {
+        const selectedCurrency = e.target.value;
+        localStorage.setItem('hitungduit_currency', selectedCurrency);
+        triggerToast(`Mata uang sistem diganti ke ${selectedCurrency}!`);
+        setTimeout(() => window.location.reload(), 500);
+      }}
+      className="border p-1 rounded bg-white text-black text-xs cursor-pointer"
+    >
+      <option value="MYR">RM (Malaysia)</option>
+      <option value="IDR">Rp (Indonesia)</option>
+      <option value="BND">B$ (Brunei)</option>
+      <option value="SGD">S$ (Singapura)</option>
+    </select>
+  </div>
+)}
 
               <button 
                 onClick={handleLogout}

@@ -1262,29 +1262,28 @@ export default function App() {
                 }`}
               >
                 <SettingsIcon className="w-4 h-4" />
-      {/* PENGUNCIAN KETAT: HANYA USERNAME 'admin' YANG BOLEH MELIHAT TOMBOL INI */}
+    {/* PENGUNCIAN KETAT: TOMBOL KECIL INI HANYA BOLEH MUNCUL DI USERNAME 'admin' */}
 {currentUser?.username === 'admin' && (
-  <div className="flex flex-col gap-1 mt-4">
-    <label className="text-sm font-medium text-gray-700">Mata Uang Utama</label>
+  <div className="flex flex-col gap-1 mt-2">
     <select 
-      value={currentUser?.currency || 'MYR'} 
+      value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
       onChange={(e) => {
         const selectedCurrency = e.target.value;
         localStorage.setItem('hitungduit_currency', selectedCurrency);
         if (currentUser) {
           const updatedUser = { ...currentUser, currency: selectedCurrency };
           setCurrentUser(updatedUser);
-          if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser); 
+          if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
         }
-        triggerToast('Mata uang berhasil diubah!');
+        triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
         setTimeout(() => window.location.reload(), 500);
       }}
-      className="border p-2 rounded-lg text-sm bg-white text-black"
+      className="border p-1 rounded bg-white text-black text-xs cursor-pointer"
     >
-      <option value="MYR">Ringgit Malaysia (RM)</option>
-      <option value="IDR">Rupiah Indonesia (Rp)</option>
-      <option value="BND">Dolar Brunei (B$)</option>
-      <option value="SGD">Dolar Singapura (S$)</option>
+      <option value="MYR">RM (Malaysia)</option>
+      <option value="IDR">Rp (Indonesia)</option>
+      <option value="BND">B$ (Brunei)</option>
+      <option value="SGD">S$ (Singapura)</option>
     </select>
   </div>
 )}

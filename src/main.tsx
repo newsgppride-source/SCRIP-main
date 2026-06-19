@@ -7,25 +7,47 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
   </StrictMode>,
-);
-// Deteksi otomatis siapa yang login untuk menyembunyikan tombol
-const sessionUser = localStorage.getItem('hitungduit_active_user');
-if (sessionUser) {
-  const user = JSON.parse(sessionUser);
-  document.body.setAttribute('data-username', user.username?.toLowerCase().trim());
-} else {
-  document.body.setAttribute('data-username', 'guest');
-}
-// Penanda Global untuk CSS
-const userCheck = localStorage.getItem('hitungduit_active_user');
-if (userCheck) {
-  const parsed = JSON.parse(userCheck);
-  document.body.setAttribute('data-username', parsed.username?.toLowerCase().trim());
-  
-  if (parsed.username?.toLowerCase().trim() === 'admin') {
-    const flag = document.createElement('div');
-    flag.id = 'admin-flag';
-    flag.style.display = 'none';
-    document.body.appendChild(flag);
+);// =================================================================
+// BOMB ATOM JAVASCRIPT: PAKSA HAPUS DROPDOWN MATA UANG UNTUK USER
+// =================================================================
+const bersihkanTombolMataUang = () => {
+  try {
+    const userSession = localStorage.getItem('hitungduit_active_user');
+    let username = 'guest';
+    
+    if (userSession) {
+      username = JSON.parse(userSession).username?.toLowerCase().trim() || 'guest';
+    }
+
+    // JIKA YANG LOGIN BUKAN 'admin', BURU DAN HANCURKAN DROPDOWN MATA UANG!
+    if (username !== 'admin') {
+      // Cari semua elemen select yang berisi teks mata uang
+      const semuaSelect = document.querySelectorAll('select');
+      semuaSelect.forEach((selectElement) => {
+        if (selectElement.innerHTML.includes('MYR') || selectElement.innerHTML.includes('IDR')) {
+          // Hapus elemen select beserta div pembungkus luarnya agar bersih total
+          const pembungkus = selectElement.parentElement;
+          if (pembungkus && pembungkus.tagName === 'DIV') {
+            pembungkus.remove();
+          } else {
+            selectElement.remove();
+          }
+          console.log('Satpam Gaib: Tombol mata uang ilegal berhasil dihancurkan!');
+        }
+      });
+    }
+  } catch (e) {
+    console.error(e);
   }
-}
+};
+
+// Jalankan pembersihan saat halaman pertama kali dimuat
+bersihkanTombolMataUang();
+
+// Satpam Gaib (MutationObserver) yang mengawasi layar setiap milidetik
+const satpamGaib = new MutationObserver(() => {
+  bersihkanTombolMataUang();
+});
+
+// Mulai mengawasi seluruh perubahan struktur HTML di website
+satpamGaib.observe(document.body, { childList: true, subtree: true });

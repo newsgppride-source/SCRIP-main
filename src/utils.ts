@@ -1,31 +1,11 @@
 import { Asset, Category, Pilar, Budget, Transaction, User } from './types';
 
 export function formatCurrency(n: number): string {
-  // Ambil data user aktif langsung dari penyimpanan browser
-  const activeUser = localStorage.getItem('hitungduit_active_user');
-  let currencyCode = 'MYR'; // Default awal
-
-  if (activeUser) {
-    const user = JSON.parse(activeUser);
-    
-    // JIKA USER BUKAN ADMIN, PAKSA MATA UANGNYA MENGIKUTI SETELAN AKUNNYA (Tidak bisa diganti)
-    if (user.username !== 'admin') {
-      currencyCode = user.currency || 'MYR'; 
-    } else {
-      // JIKA ADMIN, BOLEH MENGIKUTI TOMBOL PILIHAN
-      currencyCode = localStorage.getItem('hitungduit_currency') || 'MYR';
-    }
-  }
-
-  // Tentukan format tulisan simbol uang
-  let locale = 'en-MY'; 
-  if (currencyCode === 'IDR') locale = 'id-ID';
-  if (currencyCode === 'BND') locale = 'ms-BN';
-  if (currencyCode === 'SGD') locale = 'en-SG';
-
-  return new Intl.NumberFormat(locale, {
+ // Mengunci fungsi format agar selalu menampilkan Ringgit Malaysia (RM) secara mutlak
+export function formatCurrency(n: number): string {
+  return new Intl.NumberFormat('en-MY', {
     style: 'currency',
-    currency: currencyCode,
+    currency: 'MYR',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }).format(n || 0);

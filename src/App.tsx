@@ -1130,7 +1130,9 @@ export default function App() {
             {/* Header branding */}
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20">
-                <Wallet className="w-8 h-8 text-white" />
+                // KODE BARU (Menggunakan logo kustom favicon.png Anda):
+              <img src="/favicon.png" alt="Logo Wang Ajaib Halal" className="w-16 h-16 mx-auto mb-4 object-contain" />
+
               </div>
               <h2 className="text-2xl font-extrabold tracking-tight">WANG AJAIB</h2>
               <p className="text-slate-400 text-sm mt-1">wang ajaib halal pertolongan yang memerlukan (RM)</p>

@@ -43,21 +43,15 @@
   scrollbar-width: none;
 }
 /* ================================================================= */
-/* TRIK PENGGUSURAN FISIK: HAPUS DROPDOWN 4 NEGARA JIKA BUKAN ADMIN  */
+/* SOLUSI AKHIR: HANCURKAN DROPDOWN MATA UANG UTAMA JIKA BUKAN ADMIN */
 /* ================================================================= */
 
-/* Jika di dalam website ada dropdown yang isinya pas 4 pilihan, hilangkan secara visual */
-select:has(option:nth-child(4)):not(:has(option:nth-child(5))) {
+/* 1. Jika pengguna biasa (Dina) masuk, hapus kotak dropdown ini dari layar */
+body:not([data-username="admin"]) select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer {
   display: none !important;
 }
 
-/* Jika dropdown tersebut dibungkus oleh kotak DIV kecil, ikut hilangkan juga */
-div:has(> select:has(option:nth-child(4)):not(:has(option:nth-child(5)))) {
+/* 2. Jika struktur pembungkus div luarnya ikut membawa jarak/margin, sembunyikan juga */
+body:not([data-username="admin"]) div:has(> select.border.p-1.rounded.bg-white.text-black.text-xs.cursor-pointer) {
   display: none !important;
 }
-/* PENGECUALIAN: Jika halaman mendeteksi Anda adalah Admin, munculkan kembali tombolnya */
-body.admin-mode select, 
-body:has(.text-emerald-500) select {
-  display: inline-block !important;
-}
-

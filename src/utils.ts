@@ -1,9 +1,9 @@
 import { Asset, Category, Pilar, Budget, Transaction, User } from './types';
 
-// Helper to format currency in Malaysian Ringgit
-// Fungsi baru untuk mendukung MYR, IDR, BND, dan SGD
-export function formatCurrency(n: number, currencyCode: string = 'MYR'): string {
-  // Menentukan format tulisan berdasarkan mata uang
+export function formatCurrency(n: number): string {
+  // Ambil mata uang yang aktif dari browser, jika tidak ada pakai MYR
+  const currencyCode = localStorage.getItem('hitungduit_currency') || 'MYR';
+  
   let locale = 'en-MY'; 
   if (currencyCode === 'IDR') locale = 'id-ID';
   if (currencyCode === 'BND') locale = 'ms-BN';
@@ -16,6 +16,7 @@ export function formatCurrency(n: number, currencyCode: string = 'MYR'): string 
     maximumFractionDigits: 2
   }).format(n || 0);
 }
+
 
 // Format date in beautiful Indonesian/Malay style
 export function formatCustomDate(dStr: string): string {

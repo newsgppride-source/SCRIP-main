@@ -1256,15 +1256,26 @@ export default function App() {
               >
                 <SettingsIcon className="w-4 h-4" />
               </button>
-              {/* KOTAK PILIHAN MATA UANG */}
+             {/* KOTAK PILIHAN MATA UANG PERBAIKAN */}
 <div className="flex flex-col gap-1 mt-2">
   <select 
-    value={currentUser?.currency || 'MYR'} 
+    value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
     onChange={(e) => {
-      const updatedUser = { ...currentUser, currency: e.target.value };
-      setCurrentUser(updatedUser);
-      if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser); 
-      triggerToast('Mata uang diganti!');
+      const selectedCurrency = e.target.value;
+      // 1. Simpan mata uang langsung ke browser localstorage agar instan
+      localStorage.setItem('hitungduit_currency', selectedCurrency);
+      
+      // 2. Jika akun user sedang aktif, ikut perbarui datanya
+      if (currentUser) {
+        const updatedUser = { ...currentUser, currency: selectedCurrency };
+        setCurrentUser(updatedUser);
+        if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
+      }
+      
+      triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
+      
+      // 3. Paksa aplikasi memuat ulang tampilan dengan mata uang baru
+      setTimeout(() => window.location.reload(), 500);
     }}
     className="border p-1 rounded bg-white text-black text-xs cursor-pointer"
   >

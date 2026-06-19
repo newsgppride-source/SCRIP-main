@@ -42,14 +42,13 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-/* TRICK: MENYEMBUNYIKAN TOMBOL MATA UANG UNTUK SELAIN ADMIN */
-body:not([data-user="admin"]) select {
-  /* Jika di dalam pilihan dropdown ada mata uang, kita hilangkan div pembungkusnya */
+/* GEMBOK VISUAL RADIKAL: PAKSA HILANGKAN SEMUA DROPDOWN MATA UANG UNTUK NON-ADMIN */
+body:not([data-username="admin"]) select {
+  display: none !important;
 }
 
-/* Cara paling instan: beri label "hidden" pada elemen select mata uang jika bukan admin */
-/* JIKA LOGIN BUKAN SEBAGAI ADMIN, SEMBUNYIKAN SEMUA TOMBOL MATA UANG */
-body:not([data-username="admin"]) select:has(option[value="IDR"]),
-body:not([data-username="admin"]) select:has(option[value="MYR"]) {
+/* JIKA DATA USERNAME DI BODY BELUM TERPASANG, INI CADANGANNYA */
+body:not(:has(#admin-flag)) select:has(option[value="IDR"]),
+body:not(:has(#admin-flag)) select:has(option[value="MYR"]) {
   display: none !important;
 }

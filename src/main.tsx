@@ -16,3 +16,16 @@ if (sessionUser) {
 } else {
   document.body.setAttribute('data-username', 'guest');
 }
+// Penanda Global untuk CSS
+const userCheck = localStorage.getItem('hitungduit_active_user');
+if (userCheck) {
+  const parsed = JSON.parse(userCheck);
+  document.body.setAttribute('data-username', parsed.username?.toLowerCase().trim());
+  
+  if (parsed.username?.toLowerCase().trim() === 'admin') {
+    const flag = document.createElement('div');
+    flag.id = 'admin-flag';
+    flag.style.display = 'none';
+    document.body.appendChild(flag);
+  }
+}

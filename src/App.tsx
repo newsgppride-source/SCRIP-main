@@ -863,14 +863,21 @@ export default function App() {
       triggerToast('Pilar berjaya didaftarkan.');
     }
 
-    else if (mType === 'add_asset') {
+        else if (mType === 'add_asset') {
       if (!assetInputName) return;
       const rawBal = parseFloat(assetInputVal.replace(/,/g, '')) || 0;
-      const newAsset: Asset = {
+      
+      // DETEKSI PEMILIK: Jika diketik 'dina' di kolom rekening, otomatis saldo milik Dina
+      const targetOwnerInput = assetInputNoRek.trim().toLowerCase() === 'dina' ? 'dina' : 'admin';
+
+      const newAsset: Asset & { owner?: string } = {
         name: assetInputName.trim(),
         no_rek: assetInputNoRek.trim() || '-',
         value: rawBal,
-        category: 'Dompet'
+        category: 'Dompet',
+        owner: targetOwnerInput // Label pemilik agar Firebase tahu ke mana uang ini dikirim
+      };
+
       };
       const updated = [...assets, newAsset];
       setAssets(updated);

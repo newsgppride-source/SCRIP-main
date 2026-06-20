@@ -214,10 +214,12 @@ export async function dbDeleteUser(username: string) {
   await deleteDoc(doc(db, 'users', username));
 }
 
-export async function dbSaveAsset(asset: Asset) {
-  const username = getActiveUsername();
-  const uniqueAssetName = `${username}_${asset.name}`;
-  await setDoc(doc(db, 'assets', uniqueAssetName), { ...asset, owner: username });
+export async function dbSaveAsset(asset: Asset & { owner?: string }) {
+  // Jika Admin sudah menentukan pemiliknya (misal: 'dina'), gunakan nama itu.
+  // Jika tidak ditentukan, baru gunakan nama user yang sedang login saat ini.
+  const targetOwner = asset.owner || getActiveUsername();
+  const uniqueAssetName = `${targetOwner}_${asset.name}`;
+  await setDoc(doc(db, 'assets', uniqueAssetName), { ...asset, owner: targetOwner });
 }
 
 export async function dbDeleteAsset(name: string) {

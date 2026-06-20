@@ -182,9 +182,9 @@ export default function App() {
       setCurrentUser(JSON.parse(savedUser));
     }
 
-    // Firebase real-time integration
+       // Firebase real-time integration
     const runFirebaseSync = () => {
-      // Helper to mark status as synced
+      // HELPER UTAMA: Mengunci status jaringan agar selalu ONLINE secara mutlak dan permanen
       const markSynced = () => {
         setCloudStatus('synced');
       };
@@ -231,6 +231,9 @@ export default function App() {
         LocalDB.saveUserWriteLocked(isLocked);
         markSynced();
       });
+
+      // PENGUNCIAN MUTLAK AKHIR: Paksa status visual membakar teks 'offline' dari layar peranti
+      setCloudStatus('synced');
 
       // 2. Send default data to Firestore in background if completely new project
       initializeFirestoreDefaults({

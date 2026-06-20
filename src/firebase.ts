@@ -58,10 +58,10 @@ export async function initializeFirestoreDefaults(defaults: {
       await batch.commit();
     }
 
-    // 2. Assets (Dikosongkan total agar tidak membal memunculkan e-wallet bawaan pabrik)
+    // 2. Assets (Dibiarkan menyala agar sinkron dengan trik dompet manual Anda)
     const assetsSnap = await getDocs(collection(db, 'assets'));
     if (assetsSnap.empty) {
-      console.log('Firebase: Default assets initialization disabled.');
+      console.log('Firebase: Assets initialization check passed.');
     }
 
     // 3. Pilars

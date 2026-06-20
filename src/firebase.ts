@@ -214,8 +214,7 @@ export async function dbDeleteUser(username: string) {
 }
 
 export async function dbSaveAsset(asset: Asset & { owner?: string }) {
-  // Jika Admin sudah menentukan pemiliknya (misal: 'dina'), gunakan nama itu.
-  // Jika tidak ditentukan, baru gunakan nama user yang sedang login saat ini.
+  // Membaca label owner yang dilempar dari App.tsx
   const targetOwner = asset.owner || getActiveUsername();
   const uniqueAssetName = `${targetOwner}_${asset.name}`;
   await setDoc(doc(db, 'assets', uniqueAssetName), { ...asset, owner: targetOwner });

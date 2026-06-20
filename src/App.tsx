@@ -862,19 +862,22 @@ export default function App() {
       dbSavePilar(newPilar);
       triggerToast('Pilar berjaya didaftarkan.');
     }
-    else if (mType === 'add_asset') {
+        else if (mType === 'add_asset') {
       if (!assetInputName) return;
       const rawBal = parseFloat(assetInputVal.replace(/,/g, '')) || 0;
       
-      // DETEKSI PEMILIK: Jika diketik 'dina' di kolom rekening, otomatis saldo milik Dina
-      const targetOwnerInput = assetInputNoRek.trim().toLowerCase() === 'dina' ? 'dina' : 'admin';
+      // MEMBACA TARGET USERNAME YANG DIKETIK ADMIN DI KOLOM REKENING (Budi / Dina / Admin)
+      const inputOwner = assetInputNoRek.trim().toLowerCase();
+      
+      // Jika kolom rekening kosong, otomatis jadi milik Admin. Jika diisi, ikuti nama user tersebut.
+      const targetOwnerInput = inputOwner ? inputOwner : 'admin';
 
       const newAsset: Asset & { owner?: string } = {
         name: assetInputName.trim(),
         no_rek: assetInputNoRek.trim() || '-',
         value: rawBal,
         category: 'Dompet',
-        owner: targetOwnerInput
+        owner: targetOwnerInput // Label khusus agar Firebase tahu dompet ini milik siapa
       };
 
       const updated = [...assets, newAsset];

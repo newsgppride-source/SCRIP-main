@@ -59,6 +59,23 @@ import {
 } from './firebase';
 
 export default function App() {
+    // SEBATIK PEMBERSIH UTAMA: Paksa buang dompet dummy dari memori saat aplikasi dibuka
+  useEffect(() => {
+    try {
+      const bakiLokal = localStorage.getItem('hitungduit_assets');
+      if (bakiLokal) {
+        const senaraiAset = JSON.parse(bakiLokal);
+        // Jika di memori lokal terdeteksi ada Maybank bawaan pabrik, bersihkan total!
+        const adakahMaybank = senaraiAset.some((a: any) => a.name === 'Maybank' && a.no_rek === '164123456789');
+        if (adakahMaybank) {
+          localStorage.setItem('hitungduit_assets', JSON.stringify([]));
+          setAssets([]);
+          window.location.reload();
+        }
+      }
+    } catch (e) {}
+  }, []);
+
   // State from Local DB
   const [users, setUsers] = useState<User[]>([]);
   const [assets, setAssets] = useState<Asset[]>([]);

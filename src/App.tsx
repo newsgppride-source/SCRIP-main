@@ -863,7 +863,7 @@ export default function App() {
       triggerToast('Pilar berjaya didaftarkan.');
     }
 
-        else if (mType === 'add_asset') {
+         else if (mType === 'add_asset') {
       if (!assetInputName) return;
       const rawBal = parseFloat(assetInputVal.replace(/,/g, '')) || 0;
       
@@ -878,13 +878,20 @@ export default function App() {
         owner: targetOwnerInput
       };
 
+      const updated = [...assets, newAsset];
+      setAssets(updated);
+      LocalDB.saveAssets(updated);
+      dbSaveAsset(newAsset);
+      triggerToast('Pek/Dompet baru berjaya didaftarkan.');
+    }
+
       // Pastikan fungsi simpan pangkalan data dipanggil dengan benar di dalam blok ini
       if (typeof dbSaveAsset === 'function') {
         dbSaveAsset(newAsset);
       }
       triggerToast('Pek/Dompet berjaya dikemas kini.');
     }
-    
+
       };
       const updated = [...assets, newAsset];
       setAssets(updated);

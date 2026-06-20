@@ -2482,7 +2482,7 @@ export default function App() {
                     className="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-extrabold file:uppercase file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                   />
                   {txReceiptBase64 && (
-                    <div className="mt-3 relative w-20 h-20 rounded-xl overflow-hidden border border-slate-300">
+                      <div className="mt-4 relative w-36 h-36 mx-auto rounded-3xl overflow-hidden border border-slate-300 shadow-md bg-blue-600">
                       <img src={txReceiptBase64} alt="Receipt preview"className="w-full h-full object-cover rounded-3xl" />
                       <button 
                         type="button" 

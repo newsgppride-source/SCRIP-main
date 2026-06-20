@@ -106,8 +106,9 @@ export async function initializeFirestoreDefaults(defaults: {
     }
 
     // 6. Budgets
+        // 6. Budgets (PERBAIKAN MUTLAK: Hanya isi jika database BENAR-BENAR baru/kosong dari user)
     const budgetsSnap = await getDocs(collection(db, 'budgets'));
-    if (budgetsSnap.empty) {
+    if (budgetsSnap.empty && usersSnap.empty) {
       console.log('Firebase: Initializing default budgets...');
       const batch = writeBatch(db);
       budgetsToUse.forEach((b) => {

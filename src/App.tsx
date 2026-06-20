@@ -2483,7 +2483,7 @@ export default function App() {
                   />
                   {txReceiptBase64 && (
                     <div className="mt-3 relative w-20 h-20 rounded-xl overflow-hidden border border-slate-300">
-                      <img src={txReceiptBase64} alt="Receipt preview" className="w-full h-full object-cover" />
+                      <img src={txReceiptBase64} alt="Receipt preview"className="w-full h-full object-cover rounded-3xl" />
                       <button 
                         type="button" 
                         onClick={() => setTxReceiptBase64(null)}

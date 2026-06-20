@@ -875,9 +875,16 @@ export default function App() {
         no_rek: assetInputNoRek.trim() || '-',
         value: rawBal,
         category: 'Dompet',
-        owner: targetOwnerInput // Label pemilik agar Firebase tahu ke mana uang ini dikirim
+        owner: targetOwnerInput
       };
 
+      // Pastikan fungsi simpan pangkalan data dipanggil dengan benar di dalam blok ini
+      if (typeof dbSaveAsset === 'function') {
+        dbSaveAsset(newAsset);
+      }
+      triggerToast('Pek/Dompet berjaya dikemas kini.');
+    }
+    
       };
       const updated = [...assets, newAsset];
       setAssets(updated);

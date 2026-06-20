@@ -1319,18 +1319,7 @@ export default function App() {
           {/* SCREEN: HOME */}
           {activePage === 'home' && (
             <div className="space-y-5 animate-fadeIn">
-              {/* OFFLINE STATUS BORDER / BANNER */}
-              {cloudStatus === 'offline' && (
-                <div className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-4 py-3 rounded-2xl flex items-center justify-between gap-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="text-base leading-none">⚠️</span>
-                    <div className="text-left">
-                      <h5 className="font-extrabold text-[11px] uppercase tracking-wider">Mod Luar Talian (Offline)</h5>
-                      <p className="text-[10px] mt-0.5 opacity-95 leading-tight">
-                        Sambungan ke pangkalan data awan terputus. Saldo dipaparkan dari baki tempatan peranti ini sahaja.
-                      </p>
-                    </div>
-                  </div>
+
                   <button 
                     onClick={triggerRealCloudSync}
                     disabled={isSyncing}

@@ -128,9 +128,12 @@ export function subscribeUsers(callback: (users: User[]) => void) {
   }, (err) => console.error('Users sub err:', err));
 }
 
+// VERSI HEMAT KUOTA: Ambil data sekali saja saat disegarkan, bukan tiap detik
 export function subscribeAssets(callback: (assets: Asset[]) => void) {
   const username = getActiveUsername();
-  return onSnapshot(collection(db, 'assets'), (snapshot) => {
+  
+  // Menjalankan pengambilan data sekali saja secara aman
+  getDocs(collection(db, 'assets')).then((snapshot) => {
     const list: Asset[] = [];
     snapshot.forEach((d) => {
       const data = d.data() as Asset & { owner?: string };
@@ -143,7 +146,10 @@ export function subscribeAssets(callback: (assets: Asset[]) => void) {
       }
     });
     callback(list);
-  }, (err) => console.error('Assets sub err:', err));
+  }).catch((err) => console.error('Assets fetch err:', err));
+
+  // Berikan fungsi kosong (dummy unsubscribe) agar React App tidak error
+  return () => {};
 }
 
 export function subscribePilars(callback: (pilars: Pilar[]) => void) {

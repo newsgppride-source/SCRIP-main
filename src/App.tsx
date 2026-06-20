@@ -31,7 +31,7 @@ import {
   Lock,
   Unlock
 } from 'lucide-react';
-import { LocalDB, formatCurrency, formatCustomDate, DEFAULT_USERS } from './utils';
+import { LocalDB, formatMYR, formatCustomDate, DEFAULT_USERS } from './utils';
 import { Asset, Category, Pilar, Budget, Transaction, User } from './types';
 import { 
   initializeFirestoreDefaults,
@@ -552,7 +552,7 @@ export default function App() {
 
     return {
       title: 'Tumpuan Perbelanjaan Utama',
-      text: `Belanja tertinggi adalah bagi kategori "${topCategory.name}" yang menyumbang sebanyak ${percentage}% (${formatCurrency(topCategory.value)}) daripada jumlah pembayaran tempoh ini.`,
+      text: `Belanja tertinggi adalah bagi kategori "${topCategory.name}" yang menyumbang sebanyak ${percentage}% (${formatMYR(topCategory.value)}) daripada jumlah pembayaran tempoh ini.`,
       tip,
       isWarning: percentage > 45
     };
@@ -626,7 +626,7 @@ export default function App() {
     if (txType === 'Pengeluaran' || txType === 'Transfer') {
       const parentPocket = assets.find(a => a.name === txAsset);
       if (parentPocket && parentPocket.value < parsedAmount) {
-        if (!window.confirm(`Perhatian: Baki dompet "${txAsset}" (${formatCurrency(parentPocket.value)}) tidak mencukupi untuk bayaran RM ${txAmountStr}. Teruskan mencatat?`)) {
+        if (!window.confirm(`Perhatian: Baki dompet "${txAsset}" (${formatMYR(parentPocket.value)}) tidak mencukupi untuk bayaran RM ${txAmountStr}. Teruskan mencatat?`)) {
           return;
         }
       }
@@ -692,7 +692,7 @@ export default function App() {
     const target = transactions.find(t => t.id === id);
     if (!target) return;
 
-    if (window.confirm(`Adakah anda mahu memadam rekod "${target.category}" bernilai ${formatCurrency(target.amount)}? Baki dompet akan diselaraskan semula.`)) {
+    if (window.confirm(`Adakah anda mahu memadam rekod "${target.category}" bernilai ${formatMYR(target.amount)}? Baki dompet akan diselaraskan semula.`)) {
       // Restore balances
       const updatedAssets = assets.map(a => {
         const fresh = { ...a };
@@ -1270,29 +1270,6 @@ export default function App() {
                 <SettingsIcon className="w-4 h-4" />
               </button>
 
-   {/* CUKUP TAMBAHKAN id="tombol-mata-uang" PADA TAG SELECT INI */}
-<select 
-  id="tombol-mata-uang"
-  value={localStorage.getItem('hitungduit_currency') || 'MYR'} 
-  onChange={(e) => {
-    const selectedCurrency = e.target.value;
-    localStorage.setItem('hitungduit_currency', selectedCurrency);
-    if (currentUser) {
-      const updatedUser = { ...currentUser, currency: selectedCurrency };
-      setCurrentUser(updatedUser);
-      if (typeof dbSaveUser === 'function') dbSaveUser(updatedUser);
-    }
-    triggerToast(`Mata uang diganti ke ${selectedCurrency}!`);
-    setTimeout(() => window.location.reload(), 500);
-  }}
-  className="border p-1 rounded bg-white text-black text-xs cursor-pointer"
->
-  <option value="MYR">RM (Malaysia)</option>
-  <option value="IDR">Rp (Indonesia)</option>
-  <option value="BND">B$ (Brunei)</option>
-  <option value="SGD">S$ (Singapura)</option>
-</select>
-
               <button 
                 onClick={handleLogout}
                 className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-400 flex items-center justify-center active:scale-95 transition-all"
@@ -1375,7 +1352,7 @@ export default function App() {
 
                 <div className="flex items-center gap-3.5 mt-2.5">
                   <h1 className="text-3xl font-extrabold tracking-tight">
-                    {isBalanceHidden ? 'RM ••••••••' : formatCurrency(netWealth)}
+                    {isBalanceHidden ? 'RM ••••••••' : formatMYR(netWealth)}
                   </h1>
                   <button 
                     onClick={toggleBalancePrivacy}
@@ -1390,13 +1367,13 @@ export default function App() {
                   <div className="bg-white/10 rounded-2xl p-3 border border-white/5">
                     <span className="text-[9px] block text-sky-100 font-bold uppercase tracking-wider mb-0.5">MASUK (BULAN INI)</span>
                     <b className="text-sm font-extrabold text-emerald-300">
-                      {isBalanceHidden ? 'RM ••••' : formatCurrency(totalsThisMonth.income)}
+                      {isBalanceHidden ? 'RM ••••' : formatMYR(totalsThisMonth.income)}
                     </b>
                   </div>
                   <div className="bg-white/10 rounded-2xl p-3 border border-white/5">
                     <span className="text-[9px] block text-sky-100 font-bold uppercase tracking-wider mb-0.5">KELUAR (BULAN INI)</span>
                     <b className="text-sm font-extrabold text-rose-300">
-                      {isBalanceHidden ? 'RM ••••' : formatCurrency(totalsThisMonth.expense)}
+                      {isBalanceHidden ? 'RM ••••' : formatMYR(totalsThisMonth.expense)}
                     </b>
                   </div>
                 </div>
@@ -1425,7 +1402,7 @@ export default function App() {
                         <div>
                           <span className="text-[9px] font-extrabold text-slate-400 block tracking-widest uppercase">{w.name}</span>
                           <b className="text-sm font-black text-slate-800 dark:text-slate-100 tracking-tight mt-0.5 block">
-                            {isBalanceHidden ? 'RM •••' : formatCurrency(w.value)}
+                            {isBalanceHidden ? 'RM •••' : formatMYR(w.value)}
                           </b>
                         </div>
                       </div>
@@ -1470,13 +1447,13 @@ export default function App() {
                           <div 
                             style={{ height: `${Math.max(incomingHeight, 2)}%` }}
                             className="w-2 bg-emerald-500 rounded-t-sm transition-all duration-500 group-hover:brightness-105"
-                            title={`Masuk: ${formatCurrency(dayIncoming)}`}
+                            title={`Masuk: ${formatMYR(dayIncoming)}`}
                           ></div>
                           {/* Expense column (Rose) */}
                           <div 
                             style={{ height: `${Math.max(outgoingHeight, 2)}%` }}
                             className="w-2 bg-rose-500 rounded-t-sm transition-all duration-500 group-hover:brightness-105"
-                            title={`Keluar: ${formatCurrency(dayOutgoing)}`}
+                            title={`Keluar: ${formatMYR(dayOutgoing)}`}
                           ></div>
                         </div>
                         <span className="text-[8px] font-extrabold text-slate-400 mt-2 block tracking-tight text-center whitespace-nowrap">
@@ -1529,7 +1506,7 @@ export default function App() {
                         <div className="text-right">
                           <span className="text-[9px] text-slate-400 font-bold block">{t.assetName}</span>
                           <span className={`font-extrabold text-sm ${isIncome ? 'text-emerald-500' : 'text-rose-500'}`}>
-                            {isIncome ? '+' : '-'}{formatCurrency(t.amount)}
+                            {isIncome ? '+' : '-'}{formatMYR(t.amount)}
                           </span>
                         </div>
                       </div>
@@ -1625,8 +1602,8 @@ export default function App() {
                           {/* Progress Metrics */}
                           <div className="mt-4 space-y-1.5">
                             <div className="flex justify-between items-baseline text-xs">
-                              <span className="text-slate-400">Tercatat: <b className="text-slate-700 dark:text-slate-200">{formatCurrency(totalCatur)}</b></span>
-                              <span className="text-slate-400">Siling/Limit: <b className="text-slate-800 dark:text-slate-100">{formatCurrency(b.limit)}</b></span>
+                              <span className="text-slate-400">Tercatat: <b className="text-slate-700 dark:text-slate-200">{formatMYR(totalCatur)}</b></span>
+                              <span className="text-slate-400">Siling/Limit: <b className="text-slate-800 dark:text-slate-100">{formatMYR(b.limit)}</b></span>
                             </div>
 
                             <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden relative">
@@ -1693,7 +1670,7 @@ export default function App() {
 
                       <div className="text-right flex items-center gap-3">
                         <b className="text-sm text-blue-600 dark:text-sky-400 font-extrabold">
-                          {isBalanceHidden ? 'RM •••••' : formatCurrency(a.value)}
+                          {isBalanceHidden ? 'RM •••••' : formatMYR(a.value)}
                         </b>
                         {currentUser?.role === 'Admin' && (
                           <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
@@ -1790,7 +1767,7 @@ export default function App() {
                 <div className="bg-emerald-500/10 border border-emerald-500/15 rounded-2xl p-4">
                   <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-extrabold uppercase tracking-widest">MASUK ALiran</span>
                   <h3 className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
-                    {formatCurrency(reportStats.totalIncome)}
+                    {formatMYR(reportStats.totalIncome)}
                   </h3>
                   <span className="text-[10px] text-slate-400 font-medium block mt-1">{reportStats.incomeCount} kali rekod</span>
                 </div>
@@ -1798,7 +1775,7 @@ export default function App() {
                 <div className="bg-rose-500/10 border border-rose-500/15 rounded-2xl p-4">
                   <span className="text-[9px] text-rose-600 dark:text-rose-400 font-extrabold uppercase tracking-widest">BELANJA KELUAR</span>
                   <h3 className="text-xl font-extrabold text-rose-600 dark:text-rose-400 mt-1">
-                    {formatCurrency(reportStats.totalExpense)}
+                    {formatMYR(reportStats.totalExpense)}
                   </h3>
                   <span className="text-[10px] text-slate-400 font-medium block mt-1">{reportStats.expenseCount} kali rekod</span>
                 </div>
@@ -1870,7 +1847,7 @@ export default function App() {
                       <div className="text-center z-10">
                         <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-widest">JUMLAH BELANJA</span>
                         <b className="text-base font-black text-slate-800 dark:text-slate-100 block tracking-tight">
-                          {formatCurrency(reportStats.totalExpense)}
+                          {formatMYR(reportStats.totalExpense)}
                         </b>
                       </div>
                     </div>
@@ -1890,7 +1867,7 @@ export default function App() {
                             <span className="text-slate-600 dark:text-slate-400 font-medium">{name}</span>
                           </div>
                           <span className="font-bold text-slate-800 dark:text-slate-200">
-                            {formatCurrency(valNum)} ({pct}%)
+                            {formatMYR(valNum)} ({pct}%)
                           </span>
                         </div>
                       );
@@ -1915,7 +1892,7 @@ export default function App() {
                           <b className="text-slate-800 dark:text-slate-250 text-sm font-extrabold">{item.name}</b>
                           <span className="text-[10px] text-slate-400 font-medium block mt-0.5">{percentage}% dari had belanja bulanan</span>
                         </div>
-                        <b className="text-slate-800 dark:text-slate-100 text-sm font-extrabold">{formatCurrency(item.value)}</b>
+                        <b className="text-slate-800 dark:text-slate-100 text-sm font-extrabold">{formatMYR(item.value)}</b>
                       </div>
                     );
                   })}
@@ -2075,7 +2052,7 @@ export default function App() {
                           <div>
                             <span className="text-[9px] text-slate-400 font-bold block">{t.assetName}</span>
                             <span className={`font-black text-sm block ${isInc ? 'text-emerald-500' : 'text-rose-500'}`}>
-                              {isInc ? '+' : '-'}{formatCurrency(t.amount)}
+                              {isInc ? '+' : '-'}{formatMYR(t.amount)}
                             </span>
                           </div>
                           {!(isUserWriteLocked && currentUser?.role !== 'Admin') && (

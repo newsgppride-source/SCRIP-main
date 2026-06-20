@@ -1,8 +1,7 @@
 import { Asset, Category, Pilar, Budget, Transaction, User } from './types';
 
-export function formatCurrency(n: number): string {
- // Mengunci fungsi format agar selalu menampilkan Ringgit Malaysia (RM) secara mutlak
-export function formatCurrency(n: number): string {
+// Mengunci format mata uang tunggal Ringgit Malaysia secara mutlak
+export function formatMYR(n: number): string {
   return new Intl.NumberFormat('en-MY', {
     style: 'currency',
     currency: 'MYR',
@@ -11,7 +10,7 @@ export function formatCurrency(n: number): string {
   }).format(n || 0);
 }
 
-// Format date in beautiful Indonesian/Malay style
+// Format tanggal standar
 export function formatCustomDate(dStr: string): string {
   if (!dStr) return '';
   const dt = new Date(dStr);
@@ -24,13 +23,11 @@ export function formatCustomDate(dStr: string): string {
   return `${h}:${m} • ${d} ${mn} ${y}`;
 }
 
-// Default Users
 export const DEFAULT_USERS: User[] = [
   { username: 'admin', fullname: 'Admin', role: 'Admin', email: 'admin@hitungduit.my', password: 'admin123' },
   { username: 'dina', fullname: 'Dina Wahyu', role: 'User', email: 'dina@hitungduit.my', password: 'dina123' }
 ];
 
-// Default Assets/Wallets
 export const DEFAULT_ASSETS: Asset[] = [
   { name: 'Maybank', no_rek: '164123456789', value: 15240.50, category: 'Dompet' },
   { name: 'CIMB Bank', no_rek: '8001234567', value: 8500.00, category: 'Dompet' },
@@ -39,7 +36,6 @@ export const DEFAULT_ASSETS: Asset[] = [
   { name: 'ASB Saving', no_rek: 'ASB-99812', value: 12000.00, category: 'Aset' }
 ];
 
-// Default Pillars
 export const DEFAULT_PILARS: Pilar[] = [
   { name: 'Keperluan Asas', type: 'Pengeluaran' },
   { name: 'Gaya Hidup', type: 'Pengeluaran' },
@@ -48,7 +44,6 @@ export const DEFAULT_PILARS: Pilar[] = [
   { name: 'Gaji & Pendapatan', type: 'Pemasukan' }
 ];
 
-// Default Categories
 export const DEFAULT_CATEGORIES: Category[] = [
   { name: 'Gaji Pokok', type: 'Pemasukan', pilar: 'Gaji & Pendapatan' },
   { name: 'Sampingan', type: 'Pemasukan', pilar: 'Gaji & Pendapatan' },
@@ -64,47 +59,16 @@ export const DEFAULT_CATEGORIES: Category[] = [
   { name: 'Simpanan Kecemasan', type: 'Pengeluaran', pilar: 'Pelaburan & Simpanan' }
 ];
 
-// Generate fake transactions to make charts live and beautiful on load
 export function generateDefaultTransactions(): Transaction[] {
-  const currentMonth = new Date().toISOString().substring(0, 7); // e.g. "2026-06"
-  const previousMonth = (() => {
-    const d = new Date();
-    d.setMonth(d.getMonth() - 1);
-    return d.toISOString().substring(0, 7);
-  })();
-
-  return []
+  return [];
 }
 
-// Default Target Budgets (Pemasukan / Pengeluaran)
 export const DEFAULT_BUDGETS: Budget[] = [
-  {
-    month: new Date().toISOString().substring(0, 7),
-    type: 'Pengeluaran',
-    category: 'Makanan & Minuman',
-    limit: 600.00,
-    dateRange: '',
-    note: 'Batas belanja makan di luar'
-  },
-  {
-    month: new Date().toISOString().substring(0, 7),
-    type: 'Pengeluaran',
-    category: 'Petrol & Transport',
-    limit: 250.00,
-    dateRange: '',
-    note: 'Bajet bulanan pengangkutan'
-  },
-  {
-    month: new Date().toISOString().substring(0, 7),
-    type: 'Pemasukan',
-    category: 'Maybank|Gaji Pokok',
-    limit: 4500.00,
-    dateRange: '',
-    note: 'Sasaran simpanan gaji utama'
-  }
+  { month: new Date().toISOString().substring(0, 7), type: 'Pengeluaran', category: 'Makanan & Minuman', limit: 600.00, dateRange: '', note: 'Batas belanja makan di luar' },
+  { month: new Date().toISOString().substring(0, 7), type: 'Pengeluaran', category: 'Petrol & Transport', limit: 250.00, dateRange: '', note: 'Bajet bulanan pengangkutan' },
+  { month: new Date().toISOString().substring(0, 7), type: 'Pemasukan', category: 'Maybank|Gaji Pokok', limit: 4500.00, dateRange: '', note: 'Sasaran simpanan gaji utama' }
 ];
 
-// LocalStorage keys
 const KEYS = {
   USERS: 'hitungduit_users',
   ASSETS: 'hitungduit_assets',
@@ -117,13 +81,10 @@ const KEYS = {
   USER_WRITE_LOCKED: 'hitungduit_user_write_locked'
 };
 
-// State Manager class for Local Storage Sync
 export class LocalDB {
-   static init() {
+  static init() {
     const initKey = (key: string, defaultValue: any) => {
       const value = localStorage.getItem(key);
-      // PERBAIKAN: Hapus pengecekan value === '[]'
-      // Sekarang, jika data kosong karena habis dihapus, tidak akan dipaksa isi ulang data default lagi
       if (value === null) {
         localStorage.setItem(key, JSON.stringify(defaultValue));
       }
@@ -136,93 +97,31 @@ export class LocalDB {
     initKey(KEYS.BUDGETS, DEFAULT_BUDGETS);
   }
 
-
-  static getUsers(): User[] {
-    this.init();
-    return (localStorage.getItem(KEYS.USERS) || '[]');
-  }
-
-  static saveUsers(users: User[]) {
-    localStorage.setItem(KEYS.USERS, JSON.stringify(users));
-  }
-
-  static getAssets(): Asset[] {
-    this.init();
-    return JSON.parse(localStorage.getItem(KEYS.ASSETS) || '[]');
-  }
-
-  static saveAssets(assets: Asset[]) {
-    localStorage.setItem(KEYS.ASSETS, JSON.stringify(assets));
-  }
-
-  static getPilars(): Pilar[] {
-    this.init();
-    return JSON.parse(localStorage.getItem(KEYS.PILARS) || '[]');
-  }
-
-  static savePilars(pilars: Pilar[]) {
-    localStorage.setItem(KEYS.PILARS, JSON.stringify(pilars));
-  }
-
-  static getCategories(): Category[] {
-    this.init();
-    return JSON.parse(localStorage.getItem(KEYS.CATEGORIES) || '[]');
-  }
-
-  static saveCategories(categories: Category[]) {
-    localStorage.setItem(KEYS.CATEGORIES, JSON.stringify(categories));
-  }
-
+  static getUsers(): User[] { this.init(); return JSON.parse(localStorage.getItem(KEYS.USERS) || '[]'); }
+  static saveUsers(users: User[]) { localStorage.setItem(KEYS.USERS, JSON.stringify(users)); }
+  static getAssets(): Asset[] { this.init(); return JSON.parse(localStorage.getItem(KEYS.ASSETS) || '[]'); }
+  static saveAssets(assets: Asset[]) { localStorage.setItem(KEYS.ASSETS, JSON.stringify(assets)); }
+  static getPilars(): Pilar[] { this.init(); return JSON.parse(localStorage.getItem(KEYS.PILARS) || '[]'); }
+  static savePilars(pilars: Pilar[]) { localStorage.setItem(KEYS.PILARS, JSON.stringify(pilars)); }
+  static getCategories(): Category[] { this.init(); return JSON.parse(localStorage.getItem(KEYS.CATEGORIES) || '[]'); }
+  static saveCategories(categories: Category[]) { localStorage.setItem(KEYS.CATEGORIES, JSON.stringify(categories)); }
+  
   static getTransactions(): Transaction[] {
     try {
       this.init();
       const data = localStorage.getItem(KEYS.TRANSACTIONS);
-      if (!data || data === 'undefined' || data === 'null') {
-        return [];
-      }
-      return JSON.parse(data);
-    } catch (error) {
-      localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify([]));
+      return (!data || data === 'undefined' || data === 'null') ? [] : JSON.parse(data);
+    } catch {
       return [];
     }
   }
-
-  static saveTransactions(transactions: Transaction[]) {
-    // PERBAIKAN: Ubah [] menjadi variabel transactions agar data baru bisa tersimpan
-    localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify(transactions));
-  }
-
-
-  static getBudgets(): Budget[] {
-    this.init();
-    return JSON.parse(localStorage.getItem(KEYS.BUDGETS) || '[]');
-  }
-
-  static saveBudgets(budgets: Budget[]) {
-    localStorage.setItem(KEYS.BUDGETS, JSON.stringify(budgets));
-  }
-
-  static getHideBalance(): boolean {
-    return localStorage.getItem(KEYS.HIDE_BALANCE) === 'true';
-  }
-
-  static saveHideBalance(hide: boolean) {
-    localStorage.setItem(KEYS.HIDE_BALANCE, String(hide));
-  }
-
-  static getThemeDark(): boolean {
-    return localStorage.getItem(KEYS.THEME_DARK) === 'true';
-  }
-
-  static saveThemeDark(dark: boolean) {
-    localStorage.setItem(KEYS.THEME_DARK, String(dark));
-  }
-
-  static getUserWriteLocked(): boolean {
-    return localStorage.getItem(KEYS.USER_WRITE_LOCKED) === 'true';
-  }
-
-  static saveUserWriteLocked(locked: boolean) {
-    localStorage.setItem(KEYS.USER_WRITE_LOCKED, String(locked));
-  }
+  static saveTransactions(transactions: Transaction[]) { localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify(transactions)); }
+  static getBudgets(): Budget[] { this.init(); return JSON.parse(localStorage.getItem(KEYS.BUDGETS) || '[]'); }
+  static saveBudgets(budgets: Budget[]) { localStorage.setItem(KEYS.BUDGETS, JSON.stringify(budgets)); }
+  static getHideBalance(): boolean { return localStorage.getItem(KEYS.HIDE_BALANCE) === 'true'; }
+  static saveHideBalance(hide: boolean) { localStorage.setItem(KEYS.HIDE_BALANCE, String(hide)); }
+  static getThemeDark(): boolean { return localStorage.getItem(KEYS.THEME_DARK) === 'true'; }
+  static saveThemeDark(dark: boolean) { localStorage.setItem(KEYS.THEME_DARK, String(dark)); }
+  static getUserWriteLocked(): boolean { return localStorage.getItem(KEYS.USER_WRITE_LOCKED) === 'true'; }
+  static saveUserWriteLocked(locked: boolean) { localStorage.setItem(KEYS.USER_WRITE_LOCKED, String(locked)); }
 }

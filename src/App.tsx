@@ -1169,7 +1169,7 @@ export default function App() {
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20">
                 {/* KODE BARU (Menggunakan logo kustom favicon.png Anda): */}
-             <img src="/favicon.png" alt="Logo Wang Ajaib Halal" className="w-40 h-40 mx-auto object-contain" />
+             <img src="/favicon.png" alt="Logo Wang Ajaib Halal"className="w-full max-w-[280px] h-auto mx-auto object-contain mb-6"/>
 
               </div>
               <h2 className="text-2xl font-extrabold tracking-tight">WANG AJAIB</h2>

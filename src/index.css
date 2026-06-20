@@ -1,3 +1,9 @@
 @import "tailwindcss";
 
 /* Tambahkan gaya khusus atau reset dasar aplikasi Anda di bawah ini jika diperlukan */
+/* TRIK SAKTI: Sembunyikan total kotak peringatan offline dari layar HP dan laptop */
+div:has(> div > h5), 
+.bg-orange-500, 
+.bg-amber-500 {
+  display: none !important;
+}

@@ -1534,7 +1534,7 @@ export default function App() {
                   })}
                 </div>
               </div>
-            </div>
+            </main>
           )}
 
           {/* =================================_________ ================================= */}
@@ -2303,7 +2303,7 @@ export default function App() {
             </div>
           )}
 
-        </main>
+        </div>
 
         {/* BOTTOM FIXED FLOATING ACTION BUTTON CONTAINER & TABS */}
         <div className="absolute bottom-[20px] left-1/2 -translate-x-1/2 z-35 flex items-center pointer-events-none">
@@ -2784,12 +2784,6 @@ export default function App() {
                     className="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold uppercase tracking-wider rounded-xl shadow-lg hover:opacity-90 active:scale-95 transition-all text-center"
                   >
                     Simpan
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
 
       </div>
     </div>

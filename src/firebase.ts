@@ -65,17 +65,7 @@ export async function initializeFirestoreDefaults(defaults: {
       await batch.commit();
     }
 
-    // 2. Assets
-    const assetsSnap = await getDocs(collection(db, 'assets'));
-    if (assetsSnap.empty) {
-          // 2. Assets (DIMATIKAN: Admin akan menambahkan semua e-wallet secara manual)
-    const assetsSnap = await getDocs(collection(db, 'assets'));
-    if (assetsSnap.empty) {
-      // Dikosongkan agar tidak membal memunculkan e-wallet bawaan pabrik lagi
-      console.log('Firebase: Default assets initialization disabled.');
-    }
-
-    // 3. Pilars
+      // 3. Pilars
     const pilarsSnap = await getDocs(collection(db, 'pilars'));
     if (pilarsSnap.empty) {
       const batch = writeBatch(db);

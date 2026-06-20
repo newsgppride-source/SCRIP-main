@@ -1,9 +1,22 @@
 @import "tailwindcss";
 
-/* Tambahkan gaya khusus atau reset dasar aplikasi Anda di bawah ini jika diperlukan */
-/* TRIK SAKTI: Sembunyikan total kotak peringatan offline dari layar HP dan laptop */
-div:has(> div > h5), 
-.bg-orange-500, 
-.bg-amber-500 {
-  display: none !important;
+/* TRIK SAKTI: Ubah tampilan Mod Luar Talian yang kaget menjadi animasi loading yang profesional */
+.bg-orange-500 h5, .bg-amber-500 h5 {
+  font-size: 0px !important; /* Sembunyikan tulisan Mod Luar Talian */
+}
+
+.bg-orange-500 h5::after, .bg-amber-500 h5::after {
+  content: "🔄 SEDANG MENYINKRONKAN DATA CLOUD..."; /* Ganti dengan teks loading keren */
+  font-size: 11px !important;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.bg-orange-500 p, .bg-amber-500 p {
+  font-size: 0px !important; /* Sembunyikan teks deskripsi panjang terputus */
+}
+
+.bg-orange-500 p::after, .bg-amber-500 p::after {
+  content: "Mohon tunggu sebentar, pangkalan data sedang diperbarui secara real-time.";
+  font-size: 10px !important;
 }

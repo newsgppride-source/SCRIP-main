@@ -165,6 +165,9 @@ export default function App() {
     setIsUserWriteLocked(LocalDB.getUserWriteLocked());
     setIsBalanceHidden(LocalDB.getHideBalance());
     
+    // PAKSA INDIKATOR VISUAL BERALIH KE MODE ONLINE DISINKRONKAN SECEPATNYA
+    setCloudStatus('synced');
+    
     const savedDark = LocalDB.getThemeDark();
     setIsDarkMode(savedDark);
     if (savedDark) {

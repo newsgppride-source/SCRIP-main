@@ -165,9 +165,6 @@ export default function App() {
     setIsUserWriteLocked(LocalDB.getUserWriteLocked());
     setIsBalanceHidden(LocalDB.getHideBalance());
     
-    // PAKSA INDIKATOR VISUAL BERALIH KE MODE ONLINE DISINKRONKAN SECEPATNYA
-    setCloudStatus('synced');
-    
     const savedDark = LocalDB.getThemeDark();
     setIsDarkMode(savedDark);
     if (savedDark) {
@@ -182,9 +179,9 @@ export default function App() {
       setCurrentUser(JSON.parse(savedUser));
     }
 
-       // Firebase real-time integration
+    // Firebase real-time integration
     const runFirebaseSync = () => {
-      // HELPER UTAMA: Mengunci status jaringan agar selalu ONLINE secara mutlak dan permanen
+      // Helper to mark status as synced
       const markSynced = () => {
         setCloudStatus('synced');
       };
@@ -231,9 +228,6 @@ export default function App() {
         LocalDB.saveUserWriteLocked(isLocked);
         markSynced();
       });
-
-      // PENGUNCIAN MUTLAK AKHIR: Paksa status visual membakar teks 'offline' dari layar peranti
-      setCloudStatus('synced');
 
       // 2. Send default data to Firestore in background if completely new project
       initializeFirestoreDefaults({
@@ -1319,7 +1313,18 @@ export default function App() {
           {/* SCREEN: HOME */}
           {activePage === 'home' && (
             <div className="space-y-5 animate-fadeIn">
-
+              {/* OFFLINE STATUS BORDER / BANNER */}
+              {cloudStatus === 'offline' && (
+                <div className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-4 py-3 rounded-2xl flex items-center justify-between gap-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base leading-none">⚠️</span>
+                    <div className="text-left">
+                      <h5 className="font-extrabold text-[11px] uppercase tracking-wider">Mod Luar Talian (Offline)</h5>
+                      <p className="text-[10px] mt-0.5 opacity-95 leading-tight">
+                        Sambungan ke pangkalan data awan terputus. Saldo dipaparkan dari baki tempatan peranti ini sahaja.
+                      </p>
+                    </div>
+                  </div>
                   <button 
                     onClick={triggerRealCloudSync}
                     disabled={isSyncing}
@@ -1534,7 +1539,7 @@ export default function App() {
                   })}
                 </div>
               </div>
-            </main>
+            </div>
           )}
 
           {/* =================================_________ ================================= */}
@@ -2303,7 +2308,7 @@ export default function App() {
             </div>
           )}
 
-        </div>
+        </main>
 
         {/* BOTTOM FIXED FLOATING ACTION BUTTON CONTAINER & TABS */}
         <div className="absolute bottom-[20px] left-1/2 -translate-x-1/2 z-35 flex items-center pointer-events-none">
@@ -2784,6 +2789,12 @@ export default function App() {
                     className="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold uppercase tracking-wider rounded-xl shadow-lg hover:opacity-90 active:scale-95 transition-all text-center"
                   >
                     Simpan
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
       </div>
     </div>

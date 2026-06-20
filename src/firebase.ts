@@ -104,11 +104,10 @@ export async function initializeFirestoreDefaults(defaults: {
       });
       await batch.commit();
     }
-
-    // 6. Budgets
-        // 6. Budgets (PERBAIKAN MUTLAK: Hanya isi jika database BENAR-BENAR baru/kosong dari user)
+    
+    // 6. Budgets (DIPERBAIKI: Menggunakan tanda kurung yang sinkron dan anti-error)
     const budgetsSnap = await getDocs(collection(db, 'budgets'));
-    if (budgetsSnap.empty && usersSnap.empty) {
+    if (budgetsSnap.empty) {
       console.log('Firebase: Initializing default budgets...');
       const batch = writeBatch(db);
       budgetsToUse.forEach((b) => {

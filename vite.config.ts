@@ -3,7 +3,11 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-export default defineConfig(() => {
+export default defineConfig({
+  base: '/', // Pastikan baris pengarah dasar ini ada dan aktif br0
+  plugins: [react()],
+  // ...kode config lainnya dibiarkan saja
+})
   return {
     plugins: [react(), tailwindcss()],
     resolve: {

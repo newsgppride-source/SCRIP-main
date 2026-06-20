@@ -20,3 +20,16 @@
   content: "Mohon tunggu sebentar, pangkalan data sedang diperbarui secara real-time.";
   font-size: 10px !important;
 }
+/* BOM ATOM VISUAL: Paksa semua gambar di dalam kotak logo login untuk membesar penuh */
+div[className*="w-36"] img,
+div[className*="w-20"] img,
+.relative.w-20.h-20 img,
+.relative.w-36.h-36 img {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transform: scale(2.3) !important;
+  transform-origin: center !important;
+}

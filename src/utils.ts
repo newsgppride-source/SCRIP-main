@@ -1,6 +1,5 @@
 import { Asset, Category, Pilar, Budget, Transaction, User } from './types';
 
-// Mengunci fungsi format agar selalu menampilkan Ringgit Malaysia (RM) secara mutlak
 export function formatMYR(n: number): string {
   return new Intl.NumberFormat('en-MY', {
     style: 'currency',
@@ -10,7 +9,6 @@ export function formatMYR(n: number): string {
   }).format(n || 0);
 }
 
-// Format tanggal standar
 export function formatCustomDate(dStr: string): string {
   if (!dStr) return '';
   const dt = new Date(dStr);
@@ -85,6 +83,7 @@ export class LocalDB {
   static init() {
     const initKey = (key: string, defaultValue: any) => {
       const value = localStorage.getItem(key);
+      // PERBAIKAN MUTLAK: Jika data kosong karena dihapus, jangan paksa isi ulang data default
       if (value === null) {
         localStorage.setItem(key, JSON.stringify(defaultValue));
       }

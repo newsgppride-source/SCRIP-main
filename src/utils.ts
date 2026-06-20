@@ -84,7 +84,12 @@ export class LocalDB {
       }
     };
     initKey(KEYS.USERS, DEFAULT_USERS);
-    initKey(KEYS.ASSETS, DEFAULT_ASSETS);
+    // initKey(KEYS.ASSETS, DEFAULT_ASSETS);
+        // PERBAIKAN FINAL: Matikan total pengisian otomatis e-wallet dummy ke memori lokal
+    // initKey(KEYS.ASSETS, DEFAULT_ASSETS); 
+    if (localStorage.getItem(KEYS.ASSETS) === null) {
+      localStorage.setItem(KEYS.ASSETS, JSON.stringify([])); // Paksa isi kotak kosong bersih
+    }
     initKey(KEYS.PILARS, DEFAULT_PILARS);
     initKey(KEYS.CATEGORIES, DEFAULT_CATEGORIES);
     initKey(KEYS.TRANSACTIONS, generateDefaultTransactions());

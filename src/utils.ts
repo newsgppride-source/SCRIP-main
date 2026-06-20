@@ -1,6 +1,6 @@
 import { Asset, Category, Pilar, Budget, Transaction, User } from './types';
 
-// Mengunci format mata uang tunggal Ringgit Malaysia secara mutlak
+// Mengunci sistem agar 100% kembali menggunakan mata uang tunggal Ringgit Malaysia (RM)
 export function formatMYR(n: number): string {
   return new Intl.NumberFormat('en-MY', {
     style: 'currency',

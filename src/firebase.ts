@@ -298,16 +298,11 @@ export async function fetchLiveState() {
     isUserWriteLocked: isLocked
   };
 }
-// =================================================================
-// PERBAIKAN: MENAMBAHKAN USERNAME SUPAYA SALDO & TRANSAKSI TERPISAH
-// =================================================================
-
-// Fungsi untuk mengambil username yang saat ini sedang aktif login
+// PERBAIKAN AKURAT: Membaca session login aktif yang sebenarnya dari App.tsx
 function getActiveUsername(): string {
   try {
-    // Membaca session login aktif di browser Anda
-    const activeUser = localStorage.getItem('hitungduit_active_user'); 
-    return activeUser ? JSON.parse(activeUser).username : 'global';
+    const userSession = sessionStorage.getItem('logged_user'); 
+    return userSession ? JSON.parse(userSession).username || 'global' : 'global';
   } catch {
     return 'global';
   }

@@ -65,7 +65,40 @@ export async function initializeFirestoreDefaults(defaults: {
       await batch.commit();
     }
 
-      // 3. Pilars
+   // Inisialisasi data bawaan (Aset dummy dimatikan total agar tidak membal)
+export async function initializeFirestoreDefaults(defaults: {
+  users: User[];
+  assets: Asset[];
+  pilars: Pilar[];
+  categories: Category[];
+  transactions: Transaction[];
+  budgets: Budget[];
+}) {
+  try {
+    const usersToUse = defaults.users.length > 0 ? defaults.users : DEFAULT_USERS;
+    const pilarsToUse = defaults.pilars.length > 0 ? defaults.pilars : DEFAULT_PILARS;
+    const categoriesToUse = defaults.categories.length > 0 ? defaults.categories : DEFAULT_CATEGORIES;
+    const transactionsToUse = defaults.transactions.length > 0 ? defaults.transactions : generateDefaultTransactions();
+    const budgetsToUse = defaults.budgets.length > 0 ? defaults.budgets : DEFAULT_BUDGETS;
+
+    // 1. Users
+    const usersSnap = await getDocs(collection(db, 'users'));
+    if (usersSnap.empty) {
+      const batch = writeBatch(db);
+      usersToUse.forEach((u) => {
+        const docRef = doc(db, 'users', u.username);
+        batch.set(docRef, u);
+      });
+      await batch.commit();
+    }
+
+    // 2. Assets (Dikosongkan total agar tidak membal memunculkan Maybank/CIMB dummy lagi)
+    const assetsSnap = await getDocs(collection(db, 'assets'));
+    if (assetsSnap.empty) {
+      console.log('Firebase: Default assets initialization disabled.');
+    }
+
+    // 3. Pilars
     const pilarsSnap = await getDocs(collection(db, 'pilars'));
     if (pilarsSnap.empty) {
       const batch = writeBatch(db);
@@ -98,7 +131,7 @@ export async function initializeFirestoreDefaults(defaults: {
       await batch.commit();
     }
 
-    // 6. Budgets (Hanya isi jika data budgets dan users benar-benar kosong dari awal)
+    // 6. Budgets
     const budgetsSnap = await getDocs(collection(db, 'budgets'));
     if (budgetsSnap.empty && usersSnap.empty) {
       const batch = writeBatch(db);

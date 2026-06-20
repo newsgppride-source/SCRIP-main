@@ -230,7 +230,7 @@ export async function dbSaveCategory(category: Category) {
 }
 
 export async function dbDeleteCategory(categoryName: string, categoryType: string) {
-  await deleteDoc(doc(doc(db, 'categories', `${categoryName}_${categoryType}`)));
+  await deleteDoc(doc(db, 'categories', `${categoryName}_${categoryType}`));
 }
 
 export async function dbSaveTransaction(tx: Transaction) {

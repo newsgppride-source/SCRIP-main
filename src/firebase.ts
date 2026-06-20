@@ -146,9 +146,16 @@ export function subscribeAssets(callback: (assets: Asset[]) => void) {
     const list: Asset[] = [];
     snapshot.forEach((d) => {
       const data = d.data() as Asset & { owner?: string };
-      // Filter agar saldo terpisah mandiri tiap user (Admin/Dina)
-      if (!data.owner || data.owner === username) {
+      
+      // HAK AKSES MUTLAK: Jika yang login adalah admin / super_admin, 
+      // loloskan SEMUA dompet tanpa terkecuali agar bisa dikontrol & diedit!
+      if (username.includes('admin')) {
         list.push(data);
+      } else {
+        // Jika yang login user biasa (Dina/Budi), tetap saring ketat dompet miliknya saja
+        if (!data.owner || data.owner === username) {
+          list.push(data);
+        }
       }
     });
     callback(list);

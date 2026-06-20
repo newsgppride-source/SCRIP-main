@@ -26,13 +26,8 @@ export const DEFAULT_USERS: User[] = [
   { username: 'dina', fullname: 'Dina Wahyu', role: 'User', email: 'dina@hitungduit.my', password: 'dina123' }
 ];
 
-export const DEFAULT_ASSETS: Asset[] = [
-  { name: 'Maybank', no_rek: '164123456789', value: 15240.50, category: 'Dompet' },
-  { name: 'CIMB Bank', no_rek: '8001234567', value: 8500.00, category: 'Dompet' },
-  { name: 'Touch n Go', no_rek: '0123456789', value: 450.00, category: 'Dompet' },
-  { name: 'Tunai', no_rek: '-', value: 809.50, category: 'Dompet' },
-  { name: 'ASB Saving', no_rek: 'ASB-99812', value: 12000.00, category: 'Aset' }
-];
+// MENGOSONGKAN ASSET DEFAULT AGAR TIDAK ADA DATA DUMMY YANG MEMBAL LAGI
+export const DEFAULT_ASSETS: Asset[] = [];
 
 export const DEFAULT_PILARS: Pilar[] = [
   { name: 'Keperluan Asas', type: 'Pengeluaran' },

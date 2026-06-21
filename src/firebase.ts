@@ -137,10 +137,13 @@ export function subscribeUsers(callback: (users: User[]) => void) {
   }, (err) => console.error('Users sub err:', err));
 }
 
-// VERSI REAL-TIME: Angka saldo langsung otomatis update seketika saat aplikasi dibuka
+// VERSI DINAMIS: Mengalirkan nama username secara langsung saat login agar saldo otomatis muncul tanpa reload
 export function subscribeAssets(callback: (assets: Asset[]) => void) {
-  const username = getActiveUsername();
   return onSnapshot(collection(db, 'assets'), (snapshot) => {
+    // Membaca nama pengguna yang paling baru aktif saat snapshot terjadi secara real-time
+    const currentActiveSession = sessionStorage.getItem('logged_user');
+    const username = currentActiveSession ? JSON.parse(currentActiveSession).username || 'global' : 'global';
+
     const list: Asset[] = [];
     snapshot.forEach((d) => {
       const data = d.data() as Asset & { owner?: string };

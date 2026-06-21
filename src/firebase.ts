@@ -136,8 +136,7 @@ export function subscribeUsers(callback: (users: User[]) => void) {
     callback(list);
   }, (err) => console.error('Users sub err:', err));
 }
-
-// VERSI AKURAT: Menyaring hak akses dompet berdasarkan Nomor Rekening (accountNumber) secara instan
+// VERSI DINAMIS REAL-TIME: Mengalirkan nama username secara langsung saat login agar saldo otomatis muncul tanpa reload
 export function subscribeAssets(callback: (assets: Asset[]) => void) {
   return onSnapshot(collection(db, 'assets'), (snapshot) => {
     const currentActiveSession = sessionStorage.getItem('logged_user');
@@ -160,10 +159,6 @@ export function subscribeAssets(callback: (assets: Asset[]) => void) {
     });
     callback(list);
   }, (err) => console.error('Assets real-time sub err:', err));
-}
-
-  // Berikan fungsi kosong (dummy unsubscribe) agar React App tidak error
-  return () => {};
 }
 
 export function subscribePilars(callback: (pilars: Pilar[]) => void) {

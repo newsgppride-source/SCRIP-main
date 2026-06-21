@@ -153,7 +153,9 @@ export default function App() {
   // Toast State for micro feedback
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Run initial state loading and Real-time Firestore Synchronizations
+   // ============================================================================
+  // GERBANG UTAMA SINKRONISASI REAL-TIME YANG SUCI DAN AMAN
+  // ============================================================================
   useEffect(() => {
     LocalDB.init();
     setUsers(LocalDB.getUsers());
@@ -173,131 +175,88 @@ export default function App() {
       document.body.classList.remove('dark');
     }
 
-    // Auto-login if previously saved, otherwise prompt
+    // Ambil user aktif dari session
     const savedUser = sessionStorage.getItem('logged_user');
+    let currentUsername = 'global';
     if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
+      const parsed = JSON.parse(savedUser);
+      setCurrentUser(parsed);
+      currentUsername = parsed.username || 'global';
     }
 
-          // PIPAKAN DATA ASET DENGAN PAKSAAN RE-RENDER LAYAR REAL-TIME INSTAN
-      const unsubAssets = subscribeAssets((assetsList) => {
-        setAssets([...assetsList]); // Trik kurung siku [...] memaksa React menggambar ulang layar seketika!
-        LocalDB.saveAssets(assetsList);
-        setCloudStatus('synced'); // Mengunci status visual menjadi ONLINE
-      });
+    // Jika tidak ada user yang sedang login, matikan sinkronisasi agar tidak membal saat logout
+    if (!currentUser && currentUsername === 'global') {
+      setCloudStatus('synced');
+      return;
+    }
 
-      // 1. Subscribe to real-time updates of each collection IMMEDIATELY
-      const unsubUsers = subscribeUsers((usersList) => {
+    // Array penampung fungsi pemutus sinyal (unsubscribers)
+    let unsubs: (() => void)[] = [];
+
+    // Fungsi Pipa Sinkronisasi Real-Time Firebase
+    const runFirebaseSync = () => {
+      const markSynced = () => setCloudStatus('synced');
+
+      const u1 = subscribeUsers((usersList) => {
         setUsers(usersList);
         LocalDB.saveUsers(usersList);
         markSynced();
       });
+      unsubs.push(u1);
 
-      const unsubAssets = subscribeAssets((assetsList) => {
-        setAssets(assetsList);
+      const u2 = subscribeAssets((assetsList) => {
+        setAssets([...assetsList]);
         LocalDB.saveAssets(assetsList);
         markSynced();
       });
+      unsubs.push(u2);
 
-      const unsubPilars = subscribePilars((pilarsList) => {
+      const u3 = subscribePilars((pilarsList) => {
         setPilars(pilarsList);
         LocalDB.savePilars(pilarsList);
         markSynced();
       });
+      unsubs.push(u3);
 
-      const unsubCategories = subscribeCategories((categoriesList) => {
+      const u4 = subscribeCategories((categoriesList) => {
         setCategories(categoriesList);
         LocalDB.saveCategories(categoriesList);
         markSynced();
       });
+      unsubs.push(u4);
 
-      const unsubTransactions = subscribeTransactions((txList) => {
+      const u5 = subscribeTransactions((txList) => {
         setTransactions(txList);
         LocalDB.saveTransactions(txList);
         markSynced();
       });
+      unsubs.push(u5);
 
-      const unsubBudgets = subscribeBudgets((budgetsList) => {
+      const u6 = subscribeBudgets((budgetsList) => {
         setBudgets(budgetsList);
         LocalDB.saveBudgets(budgetsList);
         markSynced();
       });
+      unsubs.push(u6);
 
-      const unsubConfig = subscribeGlobalConfig((isLocked) => {
+      const u7 = subscribeGlobalConfig((isLocked) => {
         setIsUserWriteLocked(isLocked);
         LocalDB.saveUserWriteLocked(isLocked);
         markSynced();
       });
-
-      // 2. Send default data to Firestore in background if completely new project
-      initializeFirestoreDefaults({
-        users: LocalDB.getUsers(),
-        assets: LocalDB.getAssets(),
-        pilars: LocalDB.getPilars(),
-        categories: LocalDB.getCategories(),
-        transactions: LocalDB.getTransactions(),
-        budgets: LocalDB.getBudgets()
-      }).catch((err) => {
-        console.error('Firebase background initialization error:', err);
-      });
-
-      // return clear function
-      return () => {
-        unsubUsers();
-        unsubAssets();
-        unsubPilars();
-        unsubCategories();
-        unsubTransactions();
-        unsubBudgets();
-        unsubConfig();
-      };
+      unsubs.push(u7);
     };
 
-    // Eager direct pull on startup to override empty localStorage immediately
-    const doInitialStateSync = async () => {
-      try {
-        const data = await fetchLiveState();
-        if (data.users.length > 0) setUsers(data.users);
-        if (data.assets.length > 0) setAssets(data.assets);
-        if (data.pilars.length > 0) setPilars(data.pilars);
-        if (data.categories.length > 0) setCategories(data.categories);
-        if (data.transactions.length > 0) setTransactions(data.transactions);
-        if (data.budgets.length > 0) setBudgets(data.budgets);
-        setIsUserWriteLocked(data.isUserWriteLocked);
+    // Nyalakan sinkronisasi jika user valid
+    runFirebaseSync();
 
-        // Store in local storage
-        if (data.users.length > 0) LocalDB.saveUsers(data.users);
-        if (data.assets.length > 0) LocalDB.saveAssets(data.assets);
-        if (data.pilars.length > 0) LocalDB.savePilars(data.pilars);
-        if (data.categories.length > 0) LocalDB.saveCategories(data.categories);
-        if (data.transactions.length > 0) LocalDB.saveTransactions(data.transactions);
-        if (data.budgets.length > 0) LocalDB.saveBudgets(data.budgets);
-        LocalDB.saveUserWriteLocked(data.isUserWriteLocked);
-
-        setCloudStatus('synced');
-      } catch (err) {
-        console.warn('Initial cloud pull failed, relying on snapshots or localStorage cache:', err);
-      }
-    };
-
-    const unsubFunc = runFirebaseSync();
-    doInitialStateSync();
-
-    // Setup offline fallback timer if cloud connection takes too long
-    const checkTimeout = setTimeout(() => {
-      setCloudStatus((current) => {
-        if (current === 'connecting') {
-          return 'offline';
-        }
-        return current;
-      });
-    }, 4500);
-
+    // Fungsi Pembersih Otomatis (Cleanup) saat Logout ditekan
     return () => {
-      if (unsubFunc) unsubFunc();
-      clearTimeout(checkTimeout);
+      unsubs.forEach((unsub) => {
+        if (typeof unsub === 'function') unsub();
+      });
     };
-  }, []);
+  }, [currentUser]); // Kunci penggerak utama berbasis perubahan status user!
 
   // Sync Live Clock in ms-MY / en-MY style
   useEffect(() => {
@@ -1056,16 +1015,6 @@ export default function App() {
       LocalDB.saveCategories(updatedCategories);
 
       triggerToast('Pilar ditolak dari senarai.');
-    }
-  };
-
-  const handleDeleteAsset = (name: string) => {
-    if (window.confirm(`Adakah anda mahu memadam akaun "${name}"? Semua data mutasi sejarah tidak akan diganggu.`)) {
-      const updated = assets.filter(a => a.name !== name);
-      setAssets(updated);
-      LocalDB.saveAssets(updated);
-      dbDeleteAsset(name);
-      triggerToast('Akaun bank dikeluarkan.');
     }
   };
 
@@ -2818,4 +2767,5 @@ export default function App() {
       </div>
     </div>
   );
+}
 }

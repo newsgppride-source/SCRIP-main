@@ -326,25 +326,22 @@ export default function App() {
     }, 2500);
   };
 
-  // MANIPULASI LOGOUT: Bersihkan seluruh memori sesi secara total dan kembali ke halaman login
+  // 1. MANIPULASI LOGOUT: Bersihkan memori total dan putus jalur paksa agar tidak membal ke beranda
   const handleLogout = () => {
-    // 1. Hapus seluruh brankas penyimpanan sesi di browser
+    // Bersihkan seluruh brankas penyimpanan sesi di browser
     sessionStorage.clear();
-    localStorage.removeItem('logged_user');
+    localStorage.clear();
     
-    // 2. Kosongkan status pengguna secara murni
+    // Kosongkan status pengguna secara murni
     setCurrentUser(null);
     setUsers([]);
     setAssets([]);
     setTransactions([]);
     
-    // 3. Tampilkan pesan sukses
     triggerToast("Anda telah keluar dari sistem secara aman.");
     
-    // 4. Paksa browser memuat ulang halaman secara bersih ke jalur Login depan
-    setTimeout(() => {
-      window.location.reload();
-    }, 300);
+    // Trik Pemutus Paksa: Langsung pindahkan rute window ke halaman utama secara bersih
+    window.location.href = window.location.origin + window.location.pathname;
   };
 
   // Handle authentication login
@@ -996,22 +993,33 @@ export default function App() {
     closeSettingsModal();
   };
 
-  // Delete handlers inside settings
-  const handleDeleteUser = (username: string) => {
-    if (username === 'admin') {
-      alert('Tidak boleh memadam akaun pemilik utama (Super Admin).');
-      return;
-    }
-    if (currentUser?.username === username) {
-      alert('Anda tidak boleh memadam akaun anda yang sedang log masuk!');
-      return;
-    }
-    if (window.confirm(`Singkirkan akaun pengguna "@${username}"?`)) {
-      const updated = users.filter(u => u.username !== username);
-      setUsers(updated);
-      LocalDB.saveUsers(updated);
-      dbDeleteUser(username);
-      triggerToast('Pengguna ditolak akses.');
+   // 2. PERBAIKAN HAPUS DOMPET: Pastikan data terhapus permanen di cloud Firebase menggunakan objek utuh
+  const handleDeleteAsset = async (assetObj: Asset) => {
+    // Mendukung pengiriman nama langsung maupun objek dokumen utuh
+    const assetName = typeof assetObj === 'string' ? assetObj : assetObj.name;
+    
+    if (window.confirm(`Adakah anda mahu memadam akaun "${assetName}"? Semua data mutasi sejarah tidak akan diganggu.`)) {
+      try {
+        // Hapus dari state layar dan LocalDB lokal terlebih dahulu
+        const updated = assets.filter(a => a.name !== assetName);
+        setAssets(updated);
+        LocalDB.saveAssets(updated);
+        
+        // Kirim perintah hapus ke Firebase menggunakan objek utuh agar id dokumennya valid terhapus di cloud
+        if (typeof dbDeleteAsset === 'function') {
+          if (typeof assetObj === 'object') {
+            await dbDeleteAsset(assetObj);
+          } else {
+            const targetAsset = assets.find(a => a.name === assetName);
+            if (targetAsset) await dbDeleteAsset(targetAsset);
+          }
+        }
+        
+        triggerToast('Akaun bank dikeluarkan secara permanen.');
+      } catch (error) {
+        console.error("Gagal menghapus dompet dari server cloud:", error);
+        triggerToast('Gagal menghapus dari server, coba lagi.');
+      }
     }
   };
 
@@ -1718,7 +1726,7 @@ export default function App() {
                               <Edit3 className="w-3.5 h-3.5" />
                             </button>
                             <button 
-                              onClick={() => handleDeleteAsset(a.name)}
+                              onClick={() => handleDeleteAsset(name)}
                               className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600"
                             >
                               <Trash2 className="w-3.5 h-3.5" />

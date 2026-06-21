@@ -23,10 +23,19 @@ import firebaseConfig from '../firebase-applet-config.json';
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId || '(default)');
 
+// VERSI REAL-TIME: Memaksa sistem membaca username secara instan tepat di detik klik login aktif
 function getActiveUsername(): string {
   try {
     const userSession = sessionStorage.getItem('logged_user');
-    return userSession ? JSON.parse(userSession).username || 'global' : 'global';
+    if (userSession) {
+      return JSON.parse(userSession).username || 'global';
+    }
+    // Cek cadangan jika memori session terlambat memuat di milidetik pertama
+    const lokalUser = localStorage.getItem('logged_user');
+    if (lokalUser) {
+      return JSON.parse(lokalUser).username || 'global';
+    }
+    return 'global';
   } catch {
     return 'global';
   }

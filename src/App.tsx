@@ -993,19 +993,23 @@ export default function App() {
     closeSettingsModal();
   };
 
-   // 2. PERBAIKAN HAPUS DOMPET: Pastikan data terhapus permanen di cloud Firebase menggunakan objek utuh
+    // 3. SAKELAR AMAN HAPUS DOMPET: Menyaring secara ketat berdasarkan nama DAN pemilik agar tidak menghapus massal
   const handleDeleteAsset = async (assetObj: Asset) => {
-    // Mendukung pengiriman nama langsung maupun objek dokumen utuh
     const assetName = typeof assetObj === 'string' ? assetObj : assetObj.name;
+    // Deteksi akun pemilik dompet secara aman
+    const assetOwner = typeof assetObj === 'object' ? assetObj.accountNumber || assetObj.owner : '';
     
     if (window.confirm(`Adakah anda mahu memadam akaun "${assetName}"? Semua data mutasi sejarah tidak akan diganggu.`)) {
       try {
-        // Hapus dari state layar dan LocalDB lokal terlebih dahulu
-        const updated = assets.filter(a => a.name !== assetName);
+        // PERBAIKAN FILTER: Hanya hilangkan dompet yang NAMA dan PEMILIKNYA cocok, dompet user lain AMAN!
+        const updated = assets.filter(a => {
+          const currentOwner = a.accountNumber || a.owner;
+          return !(a.name === assetName && currentOwner === assetOwner);
+        });
         setAssets(updated);
         LocalDB.saveAssets(updated);
         
-        // Kirim perintah hapus ke Firebase menggunakan objek utuh agar id dokumennya valid terhapus di cloud
+        // Jalankan perintah hapus dokumen permanen ke cloud Firebase
         if (typeof dbDeleteAsset === 'function') {
           if (typeof assetObj === 'object') {
             await dbDeleteAsset(assetObj);

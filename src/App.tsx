@@ -1166,16 +1166,16 @@ export default function App() {
 
           <div className="p-8 md:p-10 flex flex-col justify-center min-h-[500px]">
             {/* Header branding */}
-            <div className="text-center mb-8">
-            <div className="w-32 h-32 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20 overflow-hidden relative border-2 border-blue-500">
-                {/* LOGO MEMBESAR PENUH PAS DI DALAM KOTAK BIRU */}
-                <img 
-                  src="/favicon.png" 
-                  alt="Logo Wang Ajaib Halal"
-                  className="absolute inset-0 w-full h-full object-cover scale-[1.4] origin-center"
-                />
-              </div>
-
+<div className="text-center mb-8">
+  <div className="w-32 h-32 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20 overflow-hidden relative border-2 border-blue-500">
+    {/* LOGO MEMBESAR PENUH PAS DI DALAM KOTAK BIRU */}
+    <img 
+      src="/favicon.png" 
+      alt="Logo Wang Ajaib Halal"
+      className="w-full h-full object-contain p-2" 
+    />
+  </div>
+</div>
               <h2 className="text-2xl font-extrabold tracking-tight">WANG AJAIB</h2>
               <p className="text-slate-400 text-sm mt-1">wang ajaib halal pertolongan yang memerlukan (RM)</p>
             </div>

@@ -179,12 +179,12 @@ export default function App() {
       setCurrentUser(JSON.parse(savedUser));
     }
 
-    // Firebase real-time integration
-    const runFirebaseSync = () => {
-      // Helper to mark status as synced
-      const markSynced = () => {
-        setCloudStatus('synced');
-      };
+          // PIPAKAN DATA ASET DENGAN PAKSAAN RE-RENDER LAYAR REAL-TIME INSTAN
+      const unsubAssets = subscribeAssets((assetsList) => {
+        setAssets([...assetsList]); // Trik kurung siku [...] memaksa React menggambar ulang layar seketika!
+        LocalDB.saveAssets(assetsList);
+        setCloudStatus('synced'); // Mengunci status visual menjadi ONLINE
+      });
 
       // 1. Subscribe to real-time updates of each collection IMMEDIATELY
       const unsubUsers = subscribeUsers((usersList) => {

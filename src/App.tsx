@@ -357,16 +357,18 @@ export default function App() {
       )) ||
       (!found.password && (loginPassword === '@RuangPerpus' || loginPassword === 'admin123' || loginPassword === found.username))
     );
-
-    if (found && isPasswordValid) {
+        if (found && isPasswordValid) {
       setLoginError('');
       setCurrentUser(found);
       sessionStorage.setItem('logged_user', JSON.stringify(found));
+      localStorage.setItem('logged_user', JSON.stringify(found)); // Cadangan memori instan
+      
+      // MEMAKSA MESIN SINKRONISASI FIREBASE CLOUD TERBANGUN INSTAN DETIK INI JUGA!
+      runFirebaseSync();
+      setCloudStatus('synced');
+      
       triggerToast(`Selamat kembali, ${found.fullname}!`);
-    } else {
-      setLoginError('Kredensial login tidak sah (Username/Kata Laluan salah).');
     }
-  };
 
   // Force database sync and pull fresh live state straight from cloud
   const triggerRealCloudSync = async () => {

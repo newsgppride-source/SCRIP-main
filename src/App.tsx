@@ -326,18 +326,26 @@ export default function App() {
     }, 2500);
   };
 
- const handleLogout = () => {
-  // 1. Bersihkan seluruh memori sesi login di browser agar tidak tersangkut
-  localStorage.clear(); 
-  
-  // 2. Setel ulang status user aktif menjadi kosong (null)
-  setCurrentUser(null); 
-  
-  triggerToast('Anda telah log keluar.');
-  
-  // 3. Muat ulang halaman agar sistem bersih total
-  window.location.reload(); 
-};
+  // MANIPULASI LOGOUT: Bersihkan seluruh memori sesi secara total dan kembali ke halaman login
+  const handleLogout = () => {
+    // 1. Hapus seluruh brankas penyimpanan sesi di browser
+    sessionStorage.clear();
+    localStorage.removeItem('logged_user');
+    
+    // 2. Kosongkan status pengguna secara murni
+    setCurrentUser(null);
+    setUsers([]);
+    setAssets([]);
+    setTransactions([]);
+    
+    // 3. Tampilkan pesan sukses
+    triggerToast("Anda telah keluar dari sistem secara aman.");
+    
+    // 4. Paksa browser memuat ulang halaman secara bersih ke jalur Login depan
+    setTimeout(() => {
+      window.location.reload();
+    }, 300);
+  };
 
   // Handle authentication login
   const handleLogin = (e: React.FormEvent) => {

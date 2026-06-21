@@ -2,9 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-// KONFIGURASI UTAN SEIMBANG ANTI-ERROR BUILD NETLIFY
 export default defineConfig({
-  base: '/',
+  base: './', // 🎯 KUNCI UTAMA: Ubah menjadi './' agar rute aset otomatis terbuka dinamis di internet!
   plugins: [
     react(),
     tailwindcss()

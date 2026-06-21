@@ -1166,36 +1166,29 @@ export default function App() {
 
           <div className="p-8 md:p-10 flex flex-col justify-center min-h-[500px]">
             {/* Header branding */}
-<div className="text-center mb-8">
-  <div className="w-32 h-32 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20 overflow-hidden relative border-2 border-blue-500">
-    {/* LOGO MEMBESAR PENUH PAS DI DALAM KOTAK BIRU */}
-    <img 
-      src="/favicon.png" 
-      alt="Logo Wang Ajaib Halal"
-      className="w-full h-full object-contain p-2" 
-    />
-  </div>
-</div>
+            {/* Header branding */}
+            <div className="text-center mb-8">
+              <div className="w-32 h-32 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20 overflow-hidden relative border-2 border-blue-500">
+                {/* LOGO MEMBESAR PENUH PAS DI DALAM KOTAK BIRU */}
+                <img 
+                  src="/favicon.png" 
+                  alt="Logo Wang Ajaib Halal"
+                  className="absolute inset-0 w-full h-full object-cover scale-[1.4] origin-center"
+                />
+              </div>
               <h2 className="text-2xl font-extrabold tracking-tight">WANG AJAIB</h2>
               <p className="text-slate-400 text-sm mt-1">wang ajaib halal pertolongan yang memerlukan (RM)</p>
             </div>
 
-            {/* Error badge */}
-            {loginError && (
-              <div className="bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs rounded-xl p-3 mb-4 text-center">
-                {loginError}
-              </div>
-            )}
-
-            {/* Form */}
-            <form onSubmit={handleLogin} className="space-y-4">
+            {/* Form Login */}
+            <form onSubmit={handleLogin} className="flex flex-col gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-400 mb-1 tracking-wider uppercase">Nama Pengguna (Username)</label>
+                <label className="block text-xs font-bold text-slate-400 mb-1 tracking-wider uppercase">Nama Pengguna</label>
                 <input 
                   type="text" 
                   value={loginUsername} 
                   onChange={(e) => setLoginUsername(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-950/60 border border-slate-700 rounded-xl text-slate-100 text-sm focus:outline-none focus:border-blue-500 transition-all font-medium"
+                  className="w-full px-4 py-3 bg-slate-950/60 border border-slate-700 rounded-xl text-slate-100 text-sm focus:outline-none focus:border-blue-500 transition-all"
                   placeholder="Masukkan nama pengguna"
                   required
                 />

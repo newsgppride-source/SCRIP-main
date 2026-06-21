@@ -137,20 +137,23 @@ export function subscribeUsers(callback: (users: User[]) => void) {
   }, (err) => console.error('Users sub err:', err));
 }
 
-// VERSI DINAMIS: Mengalirkan nama username secara langsung saat login agar saldo otomatis muncul tanpa reload
+// VERSI AKURAT: Menyaring hak akses dompet berdasarkan Nomor Rekening (accountNumber) secara instan
 export function subscribeAssets(callback: (assets: Asset[]) => void) {
   return onSnapshot(collection(db, 'assets'), (snapshot) => {
-    // Membaca nama pengguna yang paling baru aktif saat snapshot terjadi secara real-time
     const currentActiveSession = sessionStorage.getItem('logged_user');
     const username = currentActiveSession ? JSON.parse(currentActiveSession).username || 'global' : 'global';
 
     const list: Asset[] = [];
     snapshot.forEach((d) => {
-      const data = d.data() as Asset & { owner?: string };
-      if (username.includes('admin')) {
+      const data = d.data() as Asset & { owner?: string; accountNumber?: string };
+      
+      // Jika masuk sebagai admin, tampilkan semua dompet kustom
+      if (username.toLowerCase().includes('admin')) {
         list.push(data);
       } else {
-        if (!data.owner || data.owner === username) {
+        // Jika user biasa, cocokkan username dengan kolom Nomor Rekening (accountNumber) secara akurat
+        const isOwner = data.owner === username || (data.accountNumber && data.accountNumber.toLowerCase() === username.toLowerCase());
+        if (isOwner) {
           list.push(data);
         }
       }
